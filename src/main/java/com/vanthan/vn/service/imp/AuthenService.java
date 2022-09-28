@@ -1,18 +1,13 @@
 package com.vanthan.vn.service.imp;
 
 import com.vanthan.vn.dto.BaseResponse;
-import com.vanthan.vn.dto.RegisterDTO;
-import com.vanthan.vn.dto.RegisterResponse;
+import com.vanthan.vn.dto.RegisterForm;
+import com.vanthan.vn.dto.RegisterResult;
 import com.vanthan.vn.model.User;
 import com.vanthan.vn.repository.UserRepository;
 import com.vanthan.vn.service.ImpAuthen;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Timestamp;
-import java.util.Optional;
 
 @Service
 public class AuthenService implements ImpAuthen {
@@ -21,15 +16,15 @@ public class AuthenService implements ImpAuthen {
     private UserRepository userRepository;
 
     @Override
-    public BaseResponse<RegisterResponse> register(RegisterDTO body) {
+    public BaseResponse<RegisterResult> register(RegisterForm body) {
         User newUser =  userRepository.findByUsername(body.getUserName());
 
-        BaseResponse response = new BaseResponse<RegisterResponse>();
+        BaseResponse<RegisterResult> response = new BaseResponse<>();
 
         if(newUser != null){
-            response.setCode("123456");
+            response.setCode("111111");
             response.setMessage("User already existed");
-            return null;
+            return response;
         }
 
         userRepository.createUser(newUser);
@@ -39,9 +34,9 @@ public class AuthenService implements ImpAuthen {
 //        }
 
         response.setCode("000000");
-        response.setMessage("success");
+        response.setMessage("Successfully created!");
         //create token, add token
-        RegisterResponse registerResponse = new RegisterResponse();
+        RegisterResult registerResponse = new RegisterResult();
         registerResponse.setToken("02124465465");
         response.setBody(registerResponse);
 
