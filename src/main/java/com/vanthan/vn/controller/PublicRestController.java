@@ -1,6 +1,6 @@
 package com.vanthan.vn.controller;
 
-import com.vanthan.vn.model.Student;
+import com.vanthan.vn.model.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.web.bind.annotation.*;
@@ -20,8 +20,8 @@ public class PublicRestController {
     }
 
     @PostMapping("spring-kafka/data")
-    public String publicMessage(@RequestBody Student message){
-        kafkaTemplate.send(TOPIC, message);
+    public String publicMessage(@RequestBody User user){
+        kafkaTemplate.send(TOPIC, user);
         return "public message success";
     }
 }
