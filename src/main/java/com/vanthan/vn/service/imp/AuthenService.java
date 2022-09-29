@@ -1,10 +1,12 @@
 package com.vanthan.vn.service.imp;
 
 import com.vanthan.vn.dto.BaseResponse;
-import com.vanthan.vn.dto.RegisterDTO;
-import com.vanthan.vn.dto.RegisterResponse;
+import com.vanthan.vn.dto.RegisterForm;
+import com.vanthan.vn.dto.RegisterResult;
 import com.vanthan.vn.model.User;
+import com.vanthan.vn.model.UserToken;
 import com.vanthan.vn.repository.UserRepository;
+import com.vanthan.vn.repository.UserTokenRespository;
 import com.vanthan.vn.service.ImpAuthen;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -13,11 +15,13 @@ import org.springframework.stereotype.Service;
 public class AuthenService implements ImpAuthen {
     @Autowired
     private UserRepository userRepository;
+    @Autowired
+    private UserTokenRespository tokenRespository;
 
     @Override
-    public BaseResponse<RegisterResponse> register(RegisterDTO body) {
+    public BaseResponse<RegisterResult> register(RegisterForm body) {
         User user = new User();
-        BaseResponse response = new BaseResponse<RegisterResponse>();
+        BaseResponse response = new BaseResponse<RegisterResult>();
         //check user by user name
         user = userRepository.findByUsername(body.getUsername());
         if (user != null){
@@ -38,9 +42,16 @@ public class AuthenService implements ImpAuthen {
         response.setMessage("Successfully created a new user!");
 
         //create token, add token
-        RegisterResponse registerResponse = new RegisterResponse();
-        registerResponse.setToken("02124465465");
-        response.setBody(registerResponse);
+        RegisterResult registerResult = new RegisterResult();
+        // result token
+        registerResult.setToken("1233333");
+        UserToken userToken = new UserToken();
+        userToken.setToken(registerResult.getToken());
+        userToken.setUser_id(user.getId());
+        tokenRespository.save(userToken);
+
+        response.setBody(registerResult);
+
         return response;
     }
 }
