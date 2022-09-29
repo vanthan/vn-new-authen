@@ -3,6 +3,6 @@ package com.vanthan.vn.dto;
 import lombok.Data;
 
 @Data
-public class RegisterResponse {
+public class RegisterResult {
     private String token;
 }
