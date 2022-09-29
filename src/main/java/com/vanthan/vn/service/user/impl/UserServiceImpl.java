@@ -1,29 +1,35 @@
-package com.vanthan.vn.service.impl;
+package com.vanthan.vn.service.user.impl;
 
 import com.vanthan.vn.dto.BaseResponse;
 import com.vanthan.vn.dto.LoginResponse;
 import com.vanthan.vn.dto.UserDTO;
+import com.vanthan.vn.model.Token;
 import com.vanthan.vn.model.User;
-import com.vanthan.vn.respository.LoginRespository;
-import com.vanthan.vn.service.LoginService;
+import com.vanthan.vn.repository.TokenRespository;
+import com.vanthan.vn.repository.UserRepository;
+import com.vanthan.vn.service.user.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
-public class LoginServiceImpl implements LoginService {
+public class UserServiceImpl implements UserService {
 
     @Autowired
-    private LoginRespository loginRespository;
+    private UserRepository userRepository;
+
+    @Autowired
+    private TokenRespository tokenRespository;
 
     @Override
     public BaseResponse<LoginResponse> checkLogin(UserDTO body) throws Exception {
-        System.out.println(body.getEmail());
-        System.out.println(body.getPassword());
-        User user = loginRespository.findByEmailAndPassword(body.getEmail(), body.getPassword());
-        System.out.println(user);
+        User user = userRepository.findByEmailAndPassword(body.getEmail(), body.getPassword());
         if (user == null) {
             throw new Exception("Email hoac mat khau khong ton tai");
         }
+        Token token = new Token();
+        token.setToken("TOKEN");
+        tokenRespository.save(token);
+
         LoginResponse logRes = new LoginResponse();
         logRes.setEmail(user.getEmail());
         logRes.setToken("TOKEN");
