@@ -9,9 +9,9 @@
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
     <groupId>com.vanthan</groupId>
-    <artifactId>springboot-vn-new</artifactId>
+    <artifactId>springboot-vn-authen</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <name>vn-new-server</name>
+    <name>vn-new-authen</name>
     <description>New Server</description>
     <properties>
         <java.version>1.8</java.version>
@@ -56,6 +56,8 @@
             <artifactId>postgresql</artifactId>
             <scope>runtime</scope>
         </dependency>
+
+
     </dependencies>
 
     <build>

@@ -10,15 +10,19 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
-@RestController
+@RestController()
 public class LoginController {
 
     @Autowired
-    private LoginService loginService;
+    LoginService loginService;
 
-    @PostMapping(value = "login")
-    public ResponseEntity<BaseResponse<LoginResponse>> login(@RequestBody UserDTO body){
-        return ResponseEntity.ok(loginService.checkLogin(body));
+    @PostMapping(value = "/login")
+    public ResponseEntity<BaseResponse<LoginResponse>> register(@RequestBody UserDTO body){
+
+        try{
+            return ResponseEntity.ok(loginService.checkLogin(body));
+        }catch (Exception e){
+            return ResponseEntity.badRequest().body(new BaseResponse(null, e.getMessage()));
+        }
     }
-
 }
