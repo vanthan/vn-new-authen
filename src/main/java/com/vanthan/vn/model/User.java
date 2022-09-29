@@ -1,6 +1,7 @@
 package com.vanthan.vn.model;
 
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
 
 import javax.persistence.*;
@@ -10,6 +11,7 @@ import java.sql.Timestamp;
 @Entity
 @Table(name = "vn_user")
 @Data
+@AllArgsConstructor
 public class User {
     @Id
     @GeneratedValue(strategy= GenerationType.AUTO)
@@ -19,4 +21,8 @@ public class User {
     private String username;
     private String password;
     private Timestamp created;
+
+    public User() {
+
+    }
 }
