@@ -1,7 +1,7 @@
-package com.vanthan.vn.service.user;
+package com.vanthan.vn.service;
 
-import com.vanthan.vn.model.Token;
+import com.vanthan.vn.model.UserToken;
 
 public interface TokenService {
-    void  saveToken(Token token);
+    void  saveToken(UserToken token);
 }

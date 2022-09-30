@@ -1,4 +1,4 @@
-package com.vanthan.vn.respository;
+package com.vanthan.vn.repository;
 
 import com.vanthan.vn.model.User;
 import org.springframework.data.jpa.repository.JpaRepository;
