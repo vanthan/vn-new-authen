@@ -1,8 +1,11 @@
 package com.vanthan.vn.model;
 
+
 import lombok.Data;
 
 import javax.persistence.*;
+import java.sql.Timestamp;
+
 
 @Entity
 @Table(name = "vn_user")
@@ -15,5 +18,5 @@ public class User {
     private String email;
     private String username;
     private String password;
-
+    private Timestamp created;
 }
