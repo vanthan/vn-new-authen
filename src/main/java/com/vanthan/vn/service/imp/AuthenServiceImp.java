@@ -3,6 +3,8 @@ package com.vanthan.vn.service.imp;
 import com.vanthan.vn.dto.BaseResponse;
 import com.vanthan.vn.dto.RegisterForm;
 import com.vanthan.vn.dto.RegisterResult;
+import com.vanthan.vn.dto.UserInfo;
+import com.vanthan.vn.jwt.JwtUtils;
 import com.vanthan.vn.model.User;
 import com.vanthan.vn.model.UserToken;
 import com.vanthan.vn.repository.UserRepository;
@@ -12,11 +14,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
-public class AuthenService implements ImpAuthen {
+public class AuthenServiceImp implements ImpAuthen {
     @Autowired
     private UserRepository userRepository;
     @Autowired
     private UserTokenRespository tokenRespository;
+
+    @Autowired
+    JwtUtils jwtUtils;
 
     @Override
     public BaseResponse<RegisterResult> register(RegisterForm body) {
@@ -44,7 +49,11 @@ public class AuthenService implements ImpAuthen {
         //create token, add token
         RegisterResult registerResult = new RegisterResult();
         // result token
-        registerResult.setToken("1233333");
+        UserInfo userInfo = new UserInfo();
+        userInfo.setUserName(body.getUsername());
+        userInfo.setUserId(user.getId());
+        userInfo.setEmail(user.getEmail());
+        registerResult.setToken(jwtUtils.generateJwtToken(userInfo));
         UserToken userToken = new UserToken();
         userToken.setToken(registerResult.getToken());
         userToken.setUser_id(user.getId());
