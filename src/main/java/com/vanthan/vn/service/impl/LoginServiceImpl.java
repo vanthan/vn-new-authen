@@ -45,8 +45,8 @@ public class LoginServiceImpl implements LoginService {
         logRes.setEmail(user.getEmail());
         logRes.setToken(registerResult.getToken());
         BaseResponse response = new BaseResponse<LoginResponse>();
-        response.setCode("1234");
-        response.setCode("Success");
+        response.setCode("00");
+        response.setMessage("Success");
         response.setBody(logRes);
 
         return response;
