@@ -1,5 +1,7 @@
 package com.vanthan.vn.jwt;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 import com.vanthan.vn.dto.UserInfo;
 import com.vanthan.vn.util.Utils;
@@ -22,10 +24,16 @@ public class JwtUtils {
     private int jwtExpirationMs;
 
     public String generateJwtToken(UserInfo userInfo) {
+        Map<String, Object> claims = new HashMap<>();
+        claims.put("ID", userInfo.getUserId());
+        claims.put("User Name", userInfo.getUserName());
+        claims.put("Email", userInfo.getEmail());
+
         return Jwts.builder()
                 .setSubject(Utils.convertObjectToString(userInfo))
-                .setIssuedAt(new Date())
-                .setExpiration(new Date((new Date()).getTime() + jwtExpirationMs))
+                .setClaims(claims)
+                .setIssuedAt(new Date(System.currentTimeMillis()))
+                .setExpiration(new Date((new Date(System.currentTimeMillis())).getTime() + jwtExpirationMs))
                 .signWith(SignatureAlgorithm.HS512, jwtSecret)
                 .compact();
     }
