@@ -24,25 +24,19 @@ public class JwtUtils {
     private int jwtExpirationMs;
 
     public String generateJwtToken(UserInfo userInfo) {
+        Map<String, Object> claims = new HashMap<>();
+        claims.put("ID", userInfo.getUserId());
+        claims.put("User Name", userInfo.getUserName());
+        claims.put("Email", userInfo.getEmail());
 
         return Jwts.builder()
                 .setSubject(Utils.convertObjectToString(userInfo))
-                .setIssuedAt(new Date())
-                .setExpiration(new Date((new Date()).getTime() + jwtExpirationMs))
+                .setClaims(claims)
+                .setIssuedAt(new Date(System.currentTimeMillis()))
+                .setExpiration(new Date((new Date(System.currentTimeMillis())).getTime() + jwtExpirationMs))
                 .signWith(SignatureAlgorithm.HS512, jwtSecret)
                 .compact();
     }
-
-//    public String generateToken(UserInfo userInfo) {
-//        Map<String, Object> claims = new HashMap<>();
-//        claims.put("email", userInfo.getEmail());
-//        claims.put("name", userInfo.getUserName());
-//
-//        return Jwts.builder().setClaims(claims).setSubject(userInfo.getUserName())
-//                .setIssuedAt(new Date(System.currentTimeMillis()))
-//                .setExpiration(new Date(System.currentTimeMillis() + jwtExpirationMs))
-//                .signWith(SignatureAlgorithm.HS512, jwtSecret).compact();
-//    }
 
     public String getUserNameFromJwtToken(String token) {
         return Jwts.parser().setSigningKey(jwtSecret).parseClaimsJws(token).getBody().getSubject();

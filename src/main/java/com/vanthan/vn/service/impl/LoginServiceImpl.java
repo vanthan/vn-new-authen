@@ -32,7 +32,7 @@ public class LoginServiceImpl implements LoginService {
         RegisterResult registerResult = new RegisterResult();
 
         UserInfo userInfo = new UserInfo();
-        userInfo.setUserName(body.getUserName());
+        userInfo.setUserName(user.getUsername());
         userInfo.setUserId(user.getId());
         userInfo.setEmail(user.getEmail());
         registerResult.setToken(jwtUtils.generateJwtToken(userInfo));

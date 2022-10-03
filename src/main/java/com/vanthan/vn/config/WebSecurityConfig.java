@@ -2,7 +2,7 @@ package com.vanthan.vn.config;
 
 import com.vanthan.vn.jwt.AuthEntryPointJwt;
 import com.vanthan.vn.jwt.AuthTokenFilter;
-import com.vanthan.vn.service.imp.AuthenServiceImp;
+import com.vanthan.vn.service.impl.AuthenServiceImp;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -38,6 +38,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .and()
                 .authorizeRequests()
                     .antMatchers("/register").permitAll()
+                    .antMatchers("/login").permitAll()
                 .anyRequest().authenticated();
         http.addFilterBefore(authenticationJwtTokenFilter(), UsernamePasswordAuthenticationFilter.class);
     }
