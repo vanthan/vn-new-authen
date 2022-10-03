@@ -1,5 +1,7 @@
 package com.vanthan.vn.jwt;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 import com.vanthan.vn.dto.UserInfo;
 import com.vanthan.vn.util.Utils;
@@ -22,6 +24,7 @@ public class JwtUtils {
     private int jwtExpirationMs;
 
     public String generateJwtToken(UserInfo userInfo) {
+
         return Jwts.builder()
                 .setSubject(Utils.convertObjectToString(userInfo))
                 .setIssuedAt(new Date())
@@ -29,6 +32,17 @@ public class JwtUtils {
                 .signWith(SignatureAlgorithm.HS512, jwtSecret)
                 .compact();
     }
+
+//    public String generateToken(UserInfo userInfo) {
+//        Map<String, Object> claims = new HashMap<>();
+//        claims.put("email", userInfo.getEmail());
+//        claims.put("name", userInfo.getUserName());
+//
+//        return Jwts.builder().setClaims(claims).setSubject(userInfo.getUserName())
+//                .setIssuedAt(new Date(System.currentTimeMillis()))
+//                .setExpiration(new Date(System.currentTimeMillis() + jwtExpirationMs))
+//                .signWith(SignatureAlgorithm.HS512, jwtSecret).compact();
+//    }
 
     public String getUserNameFromJwtToken(String token) {
         return Jwts.parser().setSigningKey(jwtSecret).parseClaimsJws(token).getBody().getSubject();
