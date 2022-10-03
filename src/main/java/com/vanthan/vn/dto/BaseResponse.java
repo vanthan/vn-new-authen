@@ -9,13 +9,13 @@ public class BaseResponse<T> {
     private T body;
 
     public BaseResponse() {
-        this.code = "000"; // default code  -> ENUM OR CONFIG
+        this.code = "00"; // default code  -> ENUM OR CONFIG
         this.message = "success";
         this.body = null;
     }
 
     public BaseResponse(T body ) {
-        this.code = "000"; // default code  -> ENUM OR CONFIG
+        this.code = "00"; // default code  -> ENUM OR CONFIG
         this.message = "success";
         this.body = body;
     }

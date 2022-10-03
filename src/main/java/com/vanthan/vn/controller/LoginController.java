@@ -17,7 +17,7 @@ public class LoginController {
     LoginService loginService;
 
     @PostMapping(value = "/login")
-    public ResponseEntity<BaseResponse<LoginResponse>> register(@RequestBody UserDTO body){
+    public ResponseEntity<BaseResponse<LoginResponse>> login(@RequestBody UserDTO body){
 
         try{
             return ResponseEntity.ok(loginService.checkLogin(body));
