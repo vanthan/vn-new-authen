@@ -13,7 +13,7 @@ public class Product {
     @Id
     @GeneratedValue(strategy= GenerationType.AUTO)
     private int id;
-    private String SKU;
+    private String sku;
     private String name;
     private int quantity;
 

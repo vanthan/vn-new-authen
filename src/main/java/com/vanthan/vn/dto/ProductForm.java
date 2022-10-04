@@ -4,7 +4,7 @@ import lombok.Data;
 
 @Data
 public class ProductForm {
-    private String SKU;
+    private String sku;
     private String name;
     private int quantity;
 }

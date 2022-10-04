@@ -1,7 +1,8 @@
-package com.vanthan.vn.service.imp;
+package com.vanthan.vn.service.impl;
 
 import com.vanthan.vn.dto.BaseResponse;
 import com.vanthan.vn.dto.ProductForm;
+import com.vanthan.vn.dto.RegisterResult;
 import com.vanthan.vn.model.Product;
 import com.vanthan.vn.repository.ProductRepository;
 import com.vanthan.vn.service.ProductService;
@@ -22,19 +23,21 @@ public class ProductServiceImp implements ProductService {
     }
 
     @Override
-    public BaseResponse<String> createProduct(ProductForm form) {
-        BaseResponse response = new BaseResponse<>();
+    public BaseResponse<RegisterResult> createProduct(ProductForm form) {
+        BaseResponse response = new BaseResponse<RegisterResult>();
         // check product based on SKU
+        // list
         List<Product> product = new ArrayList<>();
-        product = productRepository.findBySKU(form.getSKU());
+        product = productRepository.findBySku(form.getSku());
         // if existed --> update quantity
-        if (product != null) {
+        if (product != null & !product.isEmpty()) {
             response.setCode("11");
             response.setMessage("Please add a number of quantity");
+            return response;
         }
         // create new product
         Product product1 = new Product();
-        product1.setSKU(form.getSKU());
+        product1.setSku(form.getSku());
         product1.setName(form.getName());
         product1.setQuantity(form.getQuantity());
 

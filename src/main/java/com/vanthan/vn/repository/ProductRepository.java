@@ -8,5 +8,5 @@ import java.util.List;
 
 @Repository
 public interface ProductRepository extends CrudRepository<Product, Integer> {
-    List<Product> findBySKU(String SKU);
+    List<Product> findBySku(String sku);
 }

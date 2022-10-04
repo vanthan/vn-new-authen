@@ -6,7 +6,7 @@ import com.vanthan.vn.dto.RegisterResult;
 import com.vanthan.vn.repository.ProductRepository;
 import com.vanthan.vn.service.ImpAuthen;
 import com.vanthan.vn.service.ProductService;
-import com.vanthan.vn.service.imp.ProductServiceImp;
+import com.vanthan.vn.service.impl.ProductServiceImp;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -22,7 +22,7 @@ public class ProductController {
     private ProductService productService;
 
     @PostMapping(value = "products")
-    public ResponseEntity<BaseResponse<String>> createProduct(@RequestBody ProductForm body){
+    public ResponseEntity<BaseResponse<RegisterResult>> createProduct(@RequestBody ProductForm body){
         return ResponseEntity.ok(productService.createProduct(body));
     }
 

@@ -5,6 +5,7 @@ import java.util.Map;
 
 import com.vanthan.vn.dto.UserInfo;
 import com.vanthan.vn.util.Utils;
+import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -23,14 +24,14 @@ public class JwtUtils {
     @Value("${bezkoder.app.jwtExpirationMs}")
     private int jwtExpirationMs;
 
-    public String generateJwtToken(UserInfo userInfo) {
+    public String generateJwtToken(@NotNull UserInfo userInfo) {
         Map<String, Object> claims = new HashMap<>();
         claims.put("ID", userInfo.getUserId());
         claims.put("User Name", userInfo.getUserName());
         claims.put("Email", userInfo.getEmail());
 
         return Jwts.builder()
-                .setSubject(Utils.convertObjectToString(userInfo))
+                .setSubject(userInfo.getUserName())
                 .setClaims(claims)
                 .setIssuedAt(new Date(System.currentTimeMillis()))
                 .setExpiration(new Date((new Date(System.currentTimeMillis())).getTime() + jwtExpirationMs))
