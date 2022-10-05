@@ -1,13 +1,18 @@
 package com.vanthan.vn.controller;
 
+import com.vanthan.vn.dto.BaseResponse;
+import com.vanthan.vn.dto.ProductForm;
+import com.vanthan.vn.dto.RegisterResult;
 import com.vanthan.vn.model.Customer;
 import com.vanthan.vn.service.CustomerService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+import javax.servlet.http.HttpServletRequest;
 
 @RestController
 public class CustomerController {
@@ -16,11 +21,23 @@ public class CustomerController {
     CustomerService customerService;
 
     @PostMapping("/saveCustomer")
-    public void saveCustomer(@RequestBody Customer customer){
-        customerService.saveCustomer(customer);
+    public ResponseEntity<BaseResponse<String >> saveCustomer(@RequestBody Customer body){
+        return ResponseEntity.ok(customerService.saveCustomer(body));
     }
     @GetMapping("/getCustomer")
-    public Page<Customer> findCustomer(){
-        return customerService.findCustomer();
+    public Page<Customer> findCustomer(@RequestParam(value = "page") int pageNo, @RequestParam(value = "totalNum") int totalNum){
+        PageRequest pageRequest = PageRequest.of(pageNo, totalNum);
+        return customerService.findCustomer(pageRequest);
     }
+
+    @DeleteMapping("/deleteCustomer/{id}")
+    public void deleteCutomer(@PathVariable Integer id){
+        customerService.deleteCustomer(id);
+    }
+
+    @PostMapping("updateCustomer")
+    public void updateCustomer(@RequestBody Customer body){
+        customerService.updateCustomer(body.getId(), body.getUserName(), body.getEmail(), body.getAge());
+    }
+
 }
