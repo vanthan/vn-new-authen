@@ -7,7 +7,10 @@ import com.vanthan.vn.model.Product;
 import com.vanthan.vn.repository.ProductRepository;
 import com.vanthan.vn.service.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
+<<<<<<< Updated upstream
 import org.springframework.data.domain.Page;
+=======
+>>>>>>> Stashed changes
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -35,7 +38,7 @@ public class ProductServiceImp implements ProductService {
         // if existed --> update quantity
         if (product != null & !product.isEmpty()) {
             response.setCode("11");
-            response.setMessage("Please add a number of quantity");
+            response.setMessage("SKU already existed!");
             return response;
         }
         // create new product
@@ -52,9 +55,16 @@ public class ProductServiceImp implements ProductService {
     }
 
     @Override
+<<<<<<< Updated upstream
     public List<Product> getProducts(int pageNo, int pageSize) {
         Pageable paging = PageRequest.of(pageNo, pageSize);
         return productRepository.findAll(paging).toList();
     }
 
+=======
+    public List<Product> getProductWithPagination(int pageNo, int pageSize) {
+        Pageable firstPageWithTenElements = PageRequest.of(0, 10);
+        return productRepository.findAll(firstPageWithTenElements).toList();
+    }
+>>>>>>> Stashed changes
 }

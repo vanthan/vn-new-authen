@@ -23,11 +23,15 @@ public class ProductController {
         return ResponseEntity.ok(productService.createProduct(body));
     }
 
-    @GetMapping(value = "getProducts")
-    public List<Product> getProducts(int pageNo, int pageSize) {
-
-        return productService.getProducts(pageNo, pageSize);
+    @GetMapping(value="products")
+    public List<Product> getProductWithPagination(@RequestParam int pageNo, @RequestParam int pageSize){
+        return productService.getProductWithPagination(pageNo, pageSize);
     }
+
+//    @PutMapping(value="products/{id}")
+//    public Product updateProduct(@RequestBody ProductForm body) {
+//        return productService.
+//    }
 
 
 }
