@@ -7,6 +7,9 @@ import com.vanthan.vn.model.Product;
 import com.vanthan.vn.repository.ProductRepository;
 import com.vanthan.vn.service.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -47,4 +50,11 @@ public class ProductServiceImp implements ProductService {
         response.setMessage("Added a new product! :)");
         return response;
     }
+
+    @Override
+    public List<Product> getProducts(int pageNo, int pageSize) {
+        Pageable paging = PageRequest.of(pageNo, pageSize);
+        return productRepository.findAll(paging).toList();
+    }
+
 }
