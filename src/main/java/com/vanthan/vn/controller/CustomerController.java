@@ -35,9 +35,8 @@ public class CustomerController {
         customerService.deleteCustomer(id);
     }
 
-    @PostMapping("updateCustomer")
-    public void updateCustomer(@RequestBody Customer body){
-        customerService.updateCustomer(body.getId(), body.getUserName(), body.getEmail(), body.getAge());
+    @PutMapping("/updateCustomer")
+    public void updateCustomer(@RequestBody Customer body) throws Exception {
+        customerService.updateCustomer(body);
     }
-
 }

@@ -1,9 +1,7 @@
 package com.vanthan.vn.service.impl;
 
 import com.vanthan.vn.dto.BaseResponse;
-import com.vanthan.vn.dto.RegisterResult;
 import com.vanthan.vn.model.Customer;
-import com.vanthan.vn.model.User;
 import com.vanthan.vn.repository.CustomerRepository;
 import com.vanthan.vn.service.CustomerService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,7 +9,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
-import javax.persistence.criteria.CriteriaBuilder;
+import java.util.Optional;
 
 @Service
 public class CustomerServiceImpl implements CustomerService {
@@ -53,8 +51,16 @@ public class CustomerServiceImpl implements CustomerService {
    }
 
    @Override
-    public void updateCustomer(Integer id, String userName, String email, String age){
-        customerRepository.updateCustomer(id, userName, email, age);
+   public void updateCustomer(Customer body) throws Exception{
+       Customer customer = customerRepository.findById(body.getId())
+               .orElseThrow(() -> new Exception("not_found"));
+
+       customer.setUserName(body.getUserName());
+       customer.setEmail(body.getEmail());
+       customer.setAge(body.getAge());
+
+       customerRepository.save(customer);
+
    }
 
 }

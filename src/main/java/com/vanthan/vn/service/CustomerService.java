@@ -19,7 +19,7 @@ public interface CustomerService {
 
     void deleteCustomer(Integer id);
 
-    void updateCustomer(Integer id, String userName, String email, String age);
+    void updateCustomer(Customer body) throws Exception;
 
 
 }
