@@ -4,6 +4,7 @@ import com.vanthan.vn.dto.BaseResponse;
 import com.vanthan.vn.dto.ProductForm;
 import com.vanthan.vn.dto.RegisterResult;
 import com.vanthan.vn.model.Customer;
+import com.vanthan.vn.model.Paging;
 import com.vanthan.vn.service.CustomerService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -24,9 +25,18 @@ public class CustomerController {
     public ResponseEntity<BaseResponse<String >> saveCustomer(@RequestBody Customer body){
         return ResponseEntity.ok(customerService.saveCustomer(body));
     }
+//    @GetMapping("/getCustomer")
+//    public Page<Customer> findCustomer(@RequestParam(value = "page") int pageNo, @RequestParam(value = "totalNum") int totalNum){
+//        PageRequest pageRequest = PageRequest.of(pageNo, totalNum);
+//        return customerService.findCustomer(pageRequest);
+//    }
+
     @GetMapping("/getCustomer")
-    public Page<Customer> findCustomer(@RequestParam(value = "page") int pageNo, @RequestParam(value = "totalNum") int totalNum){
-        PageRequest pageRequest = PageRequest.of(pageNo, totalNum);
+    public Page<Customer> findCustomer(@RequestBody Paging body){
+        Paging paging =new Paging();
+        paging.setPageNum(body.getPageNum());
+        paging.setTotalNum(body.getTotalNum());
+        PageRequest pageRequest = PageRequest.of(body.getPageNum(), body.getTotalNum());
         return customerService.findCustomer(pageRequest);
     }
 
