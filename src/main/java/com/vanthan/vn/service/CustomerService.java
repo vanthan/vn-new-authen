@@ -21,5 +21,5 @@ public interface CustomerService {
 
     void updateCustomer(Customer body) throws Exception;
 
-
+    Page<Customer> getCustomerByUserName(String userName,PageRequest pageRequest);
 }

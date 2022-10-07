@@ -9,8 +9,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
-import java.util.Optional;
-
 @Service
 public class CustomerServiceImpl implements CustomerService {
 
@@ -62,5 +60,10 @@ public class CustomerServiceImpl implements CustomerService {
        customerRepository.save(customer);
 
    }
+
+    @Override
+    public Page<Customer> getCustomerByUserName(String userName, PageRequest pageRequest){
+        return customerRepository.getCustomerByUserName(userName,pageRequest);
+    }
 
 }

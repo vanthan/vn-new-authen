@@ -31,7 +31,7 @@ public class CustomerController {
 //        return customerService.findCustomer(pageRequest);
 //    }
 
-    @GetMapping("/getCustomer")
+    @PostMapping("/getCustomer")
     public Page<Customer> findCustomer(@RequestBody Paging body){
         Paging paging =new Paging();
         paging.setPageNum(body.getPageNum());
@@ -48,5 +48,14 @@ public class CustomerController {
     @PutMapping("/updateCustomer")
     public void updateCustomer(@RequestBody Customer body) throws Exception {
         customerService.updateCustomer(body);
+    }
+
+    @PostMapping("/search-userName")
+    public Page<Customer> getCustomerByUserName(@RequestParam(value = "userName") String userName, @RequestBody Paging paging){
+        Paging paging1 =new Paging();
+        paging1.setPageNum(paging.getPageNum());
+        paging1.setTotalNum(paging.getTotalNum());
+        PageRequest pageRequest = PageRequest.of(paging.getPageNum(), paging.getTotalNum());
+        return customerService.getCustomerByUserName(userName,pageRequest);
     }
 }
