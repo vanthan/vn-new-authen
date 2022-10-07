@@ -1,10 +1,9 @@
 package com.vanthan.vn.repository;
 
-import com.vanthan.vn.model.User;
+import com.vanthan.vn.model.UserToken;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface UserRepository extends CrudRepository<User, Integer> {
-    User findByUsername(String username);
+public interface UserTokenRespository extends CrudRepository<UserToken, Integer> {
 }
