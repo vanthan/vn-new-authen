@@ -5,6 +5,13 @@ import com.vanthan.vn.dto.ProductForm;
 import com.vanthan.vn.dto.RegisterResult;
 import com.vanthan.vn.model.Product;
 
+import java.util.List;
+
 public interface ProductService {
     BaseResponse<RegisterResult> createProduct(ProductForm form);
+    List<Product> getProducts(int pageNo, int pageSize);
+
+    BaseResponse<String> updateById(Product product);
+
+    BaseResponse<String> deleteById(int id);
 }

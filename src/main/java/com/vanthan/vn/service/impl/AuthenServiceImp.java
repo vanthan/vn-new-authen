@@ -57,7 +57,7 @@ public class AuthenServiceImp implements ImpAuthen {
         registerResult.setToken(jwtUtils.generateJwtToken(userInfo));
         UserToken userToken = new UserToken();
         userToken.setToken(registerResult.getToken());
-        userToken.setUser_id(user.getId());
+        userToken.setUserId(user.getId());
         tokenRespository.save(userToken);
 
         response.setBody(registerResult);

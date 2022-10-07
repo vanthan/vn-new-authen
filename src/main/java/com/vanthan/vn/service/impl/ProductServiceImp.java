@@ -6,7 +6,10 @@ import com.vanthan.vn.dto.RegisterResult;
 import com.vanthan.vn.model.Product;
 import com.vanthan.vn.repository.ProductRepository;
 import com.vanthan.vn.service.ProductService;
+import org.apache.kafka.common.errors.ResourceNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -32,7 +35,7 @@ public class ProductServiceImp implements ProductService {
         // if existed --> update quantity
         if (product != null & !product.isEmpty()) {
             response.setCode("11");
-            response.setMessage("Please add a number of quantity");
+            response.setMessage("SKU already existed!");
             return response;
         }
         // create new product
@@ -45,6 +48,39 @@ public class ProductServiceImp implements ProductService {
         productRepository.save(product1);
         response.setCode("00");
         response.setMessage("Added a new product! :)");
+        return response;
+    }
+
+    @Override
+    public List<Product> getProducts(int pageNo, int pageSize) {
+        Pageable pagination = PageRequest.of(pageNo, pageSize);
+        return productRepository.findAll(pagination).toList();
+    }
+
+    @Override
+    public BaseResponse<String> updateById(Product product) {
+        BaseResponse<String> response = new BaseResponse<>();
+        // check product id
+//        productRepository.findById(product.getId());
+        Product updateProduct = productRepository.findById(product.getId())
+                .orElseThrow(() -> new ResourceNotFoundException("Product does not exist with id: "));
+
+        // update
+        updateProduct.setSku(product.getSku());
+        updateProduct.setName(product.getName());
+        updateProduct.setQuantity(product.getQuantity());
+
+        // save to db
+        productRepository.save(updateProduct);
+        response.setMessage("Updated!");
+        return response;
+    }
+
+    @Override
+    public BaseResponse<String> deleteById(int id) {
+        BaseResponse<String> response = new BaseResponse<>();
+        productRepository.deleteById(id);
+        response.setMessage("Deleted successfully!");
         return response;
     }
 }
