@@ -3,17 +3,20 @@ package com.vanthan.vn.service.impl;
 import com.vanthan.vn.dto.BaseResponse;
 import com.vanthan.vn.dto.ProductForm;
 import com.vanthan.vn.dto.RegisterResult;
+import com.vanthan.vn.model.Paging;
 import com.vanthan.vn.model.Product;
 import com.vanthan.vn.repository.ProductRepository;
 import com.vanthan.vn.service.ProductService;
 import org.apache.kafka.common.errors.ResourceNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class ProductServiceImp implements ProductService {
@@ -26,7 +29,7 @@ public class ProductServiceImp implements ProductService {
     }
 
     @Override
-    public BaseResponse<RegisterResult> createProduct(ProductForm form) {
+    public BaseResponse<Product> createProduct(ProductForm form) {
         BaseResponse response = new BaseResponse<RegisterResult>();
         // check product based on SKU
         // list
@@ -48,22 +51,22 @@ public class ProductServiceImp implements ProductService {
         productRepository.save(product1);
         response.setCode("00");
         response.setMessage("Added a new product! :)");
+        response.setBody(product1);
         return response;
     }
 
     @Override
-    public List<Product> getProducts(int pageNo, int pageSize) {
-        Pageable pagination = PageRequest.of(pageNo, pageSize);
-        return productRepository.findAll(pagination).toList();
+    public Page<Product> getProducts(PageRequest request) {
+        return productRepository.findAll(request);
     }
 
     @Override
-    public BaseResponse<String> updateById(Product product) {
-        BaseResponse<String> response = new BaseResponse<>();
+    public BaseResponse<Product> updateById(Product product) {
+        BaseResponse<Product> response = new BaseResponse<>();
         // check product id
-//        productRepository.findById(product.getId());
-        Product updateProduct = productRepository.findById(product.getId())
-                .orElseThrow(() -> new ResourceNotFoundException("Product does not exist with id: "));
+        Optional<Product> maybeProduct = productRepository.findById(product.getId());
+        System.out.println(maybeProduct);
+        Product updateProduct = maybeProduct.orElseThrow(() -> new ResourceNotFoundException("Product does not exist with id: "));
 
         // update
         updateProduct.setSku(product.getSku());
@@ -72,7 +75,8 @@ public class ProductServiceImp implements ProductService {
 
         // save to db
         productRepository.save(updateProduct);
-        response.setMessage("Updated!");
+         response.setMessage("Updated!");
+        response.setBody(updateProduct);
         return response;
     }
 

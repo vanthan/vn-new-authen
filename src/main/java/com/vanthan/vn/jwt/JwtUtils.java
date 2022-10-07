@@ -2,6 +2,7 @@ package com.vanthan.vn.jwt;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.function.Function;
 
 import com.vanthan.vn.dto.UserInfo;
 import com.vanthan.vn.util.Utils;
@@ -61,4 +62,6 @@ public class JwtUtils {
 
         return false;
     }
+
+
 }
