@@ -1,19 +1,16 @@
 package com.vanthan.vn.controller;
 
 import com.vanthan.vn.dto.BaseResponse;
-import com.vanthan.vn.dto.ProductForm;
-import com.vanthan.vn.dto.RegisterResult;
 import com.vanthan.vn.model.Customer;
 import com.vanthan.vn.model.Paging;
 import com.vanthan.vn.service.CustomerService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.HttpServletRequest;
+import java.util.Optional;
 
 @RestController
 public class CustomerController {
@@ -31,13 +28,21 @@ public class CustomerController {
 //        return customerService.findCustomer(pageRequest);
 //    }
 
-    @GetMapping("/getCustomer")
-    public Page<Customer> findCustomer(@RequestBody Paging body){
+    @GetMapping("/customerDetail/{id}")
+    public ResponseEntity<BaseResponse<Optional<Customer>>> findById(@PathVariable Integer id){
+        BaseResponse<Optional<Customer>> response = customerService.findById(id);
+        return ResponseEntity.ok(response);
+    }
+
+    @PostMapping("/getCustomer")
+    public ResponseEntity<BaseResponse<Page<Customer>>> findCustomer(@RequestBody Paging body){
         Paging paging =new Paging();
         paging.setPageNum(body.getPageNum());
         paging.setTotalNum(body.getTotalNum());
         PageRequest pageRequest = PageRequest.of(body.getPageNum(), body.getTotalNum());
-        return customerService.findCustomer(pageRequest);
+        BaseResponse<Page<Customer>> rs =  customerService.findCustomer(pageRequest);
+        return ResponseEntity.ok(rs);
+
     }
 
     @DeleteMapping("/deleteCustomer/{id}")
@@ -48,5 +53,16 @@ public class CustomerController {
     @PutMapping("/updateCustomer")
     public void updateCustomer(@RequestBody Customer body) throws Exception {
         customerService.updateCustomer(body);
+    }
+
+    @PostMapping("/search-userName")
+    public ResponseEntity<BaseResponse<Page<Customer>>> getCustomerByUserName(@RequestParam(value = "userName") String userName, @RequestBody Paging paging){
+        Paging paging1 =new Paging();
+        paging1.setPageNum(paging.getPageNum());
+        paging1.setTotalNum(paging.getTotalNum());
+        PageRequest pageRequest = PageRequest.of(paging.getPageNum(), paging.getTotalNum());
+        BaseResponse<Page<Customer>> rs = customerService.getCustomerByUserName(userName,pageRequest);
+
+        return ResponseEntity.ok(rs);
     }
 }
