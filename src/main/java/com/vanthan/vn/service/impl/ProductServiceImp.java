@@ -5,6 +5,7 @@ import com.vanthan.vn.dto.ProductForm;
 import com.vanthan.vn.dto.RegisterResult;
 import com.vanthan.vn.dto.UserInfo;
 import com.vanthan.vn.jwt.AuthEntryPointJwt;
+import com.vanthan.vn.jwt.AuthTokenFilter;
 import com.vanthan.vn.jwt.JwtUtils;
 import com.vanthan.vn.model.Paging;
 import com.vanthan.vn.model.Product;
@@ -39,7 +40,7 @@ public class ProductServiceImp implements ProductService {
     @Autowired
     JwtUtils jwtUtils;
     @Autowired
-    AuthEntryPointJwt authEntryPointJwt;
+    AuthTokenFilter authTokenFilter;
 
     @Override
     public BaseResponse<Product> createProduct(ProductForm form, HttpServletRequest request) {
@@ -55,7 +56,7 @@ public class ProductServiceImp implements ProductService {
             return response;
         }
         // get username from http request
-        String token = authEntryPointJwt.parseJwt(request);
+        String token = authTokenFilter.parseJwt(request);
 
         Map<String,Object> userInfo = jwtUtils.getClaimFromToken(token, claims -> {return claims;});
         String username = userInfo.get("userName").toString();
