@@ -1,19 +1,16 @@
 package com.vanthan.vn.controller;
 
 import com.vanthan.vn.dto.BaseResponse;
-import com.vanthan.vn.dto.ProductForm;
-import com.vanthan.vn.dto.RegisterResult;
 import com.vanthan.vn.model.Customer;
 import com.vanthan.vn.model.Paging;
 import com.vanthan.vn.service.CustomerService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.HttpServletRequest;
+import java.util.Optional;
 
 @RestController
 public class CustomerController {
@@ -30,6 +27,12 @@ public class CustomerController {
 //        PageRequest pageRequest = PageRequest.of(pageNo, totalNum);
 //        return customerService.findCustomer(pageRequest);
 //    }
+
+    @GetMapping("/customerDetail/{id}")
+    public ResponseEntity<BaseResponse<Optional<Customer>>> findById(@PathVariable Integer id){
+        BaseResponse<Optional<Customer>> response = customerService.findById(id);
+        return ResponseEntity.ok(response);
+    }
 
     @PostMapping("/getCustomer")
     public ResponseEntity<BaseResponse<Page<Customer>>> findCustomer(@RequestBody Paging body){

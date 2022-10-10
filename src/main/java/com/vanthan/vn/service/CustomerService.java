@@ -5,6 +5,8 @@ import com.vanthan.vn.model.Customer;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 
+import java.util.Optional;
+
 public interface CustomerService {
 
     BaseResponse<String> saveCustomer(Customer body);
@@ -16,4 +18,6 @@ public interface CustomerService {
     void updateCustomer(Customer body) throws Exception;
 
     BaseResponse<Page<Customer>> getCustomerByUserName(String userName,PageRequest pageRequest);
+
+    BaseResponse<Optional<Customer>> findById(Integer id);
 }

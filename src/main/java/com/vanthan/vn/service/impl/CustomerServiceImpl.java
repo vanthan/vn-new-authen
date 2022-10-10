@@ -9,6 +9,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
+
 @Service
 public class CustomerServiceImpl implements CustomerService {
 
@@ -36,6 +38,16 @@ public class CustomerServiceImpl implements CustomerService {
         response.setMessage("Successfully created a new Customer!");
 
         return response;
+    }
+
+    @Override
+    public BaseResponse<Optional<Customer>> findById(Integer id){
+        BaseResponse response = new BaseResponse();
+        response.setBody(customerRepository.findById(id));
+//        response.setCode("00");
+
+        return response;
+
     }
 
     @Override
