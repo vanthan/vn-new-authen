@@ -30,7 +30,7 @@ public class AuthEntryPointJwt implements AuthenticationEntryPoint {
             String jwt = parseJwt(httpServletRequest);
             log.info("Token {}", jwt);
             if (jwt != null && jwtUtils.validateJwtToken(jwt)) {
-                String username = jwtUtils.getUserNameFromJwtToken(jwt);
+               // String username = jwtUtils.getUserNameFromJwtToken(jwt);
                 UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(
                         null, null, null);
                 authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(httpServletRequest));
@@ -45,7 +45,7 @@ public class AuthEntryPointJwt implements AuthenticationEntryPoint {
         }
     }
 
-    private String parseJwt(HttpServletRequest request) {
+    public String parseJwt(HttpServletRequest request) {
         String headerAuth = request.getHeader("Authorization");
 
         if (StringUtils.hasText(headerAuth) && headerAuth.startsWith("Bearer ")) {

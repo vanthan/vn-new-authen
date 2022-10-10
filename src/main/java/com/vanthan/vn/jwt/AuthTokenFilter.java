@@ -31,12 +31,12 @@ public class AuthTokenFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
             throws ServletException, IOException {
-        String username = null;
+       // String username = null;
         try {
             String jwt = parseJwt(request);
             log.info("Token {}", jwt);
             if (jwt != null && jwtUtils.validateJwtToken(jwt)) {
-                username = jwtUtils.getUserNameFromJwtToken(jwt);
+                String username = jwtUtils.getUserNameFromJwtToken(jwt);
                 UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(
                         null, null, null);
                 authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));

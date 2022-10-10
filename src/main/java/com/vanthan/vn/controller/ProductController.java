@@ -13,6 +13,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 @RestController
@@ -23,13 +24,13 @@ public class ProductController {
     private ProductService productService;
 
     @PostMapping(value = "products")
-    public ResponseEntity<BaseResponse<Product>> createProduct(@RequestBody ProductForm body){
-        return ResponseEntity.ok(productService.createProduct(body));
+    public ResponseEntity<BaseResponse<Product>> createProduct(@RequestBody ProductForm body, HttpServletRequest request){
+        return ResponseEntity.ok(productService.createProduct(body, request));
     }
 
     @PostMapping(value = "getProducts")
-    public Page<Product> getProducts(@RequestBody Paging body) {
-        Paging paging =new Paging();
+    public BaseResponse<Page<Product>> getProducts(@RequestBody Paging body) {
+        Paging paging = new Paging();
         paging.setPageNum(body.getPageNum());
         paging.setTotalNum(body.getTotalNum());
         PageRequest pageRequest = PageRequest.of(body.getPageNum(), body.getTotalNum());

@@ -8,11 +8,12 @@ import com.vanthan.vn.model.Product;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 public interface ProductService {
-    BaseResponse<Product> createProduct(ProductForm form);
-    Page<Product> getProducts(PageRequest request);
+    BaseResponse<Product> createProduct(ProductForm form, HttpServletRequest request);
+    BaseResponse<Page<Product>> getProducts(PageRequest request);
 
     BaseResponse<Product> updateById(Product product);
 
