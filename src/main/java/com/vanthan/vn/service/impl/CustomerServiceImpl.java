@@ -16,12 +16,12 @@ public class CustomerServiceImpl implements CustomerService {
     CustomerRepository customerRepository;
 
     @Override
-    public BaseResponse<String> saveCustomer(Customer body){
+    public BaseResponse<String> saveCustomer(Customer body) {
         Customer customer = new Customer();
         BaseResponse response = new BaseResponse<String>();
         //check by userName and Email
         customer = customerRepository.findByUserNameAndEmail(body.getUserName(), body.getEmail());
-        if (customer != null){
+        if (customer != null) {
             response.setCode("001");
             response.setMessage("Customer already existed");
             return response;
@@ -38,32 +38,40 @@ public class CustomerServiceImpl implements CustomerService {
         return response;
     }
 
-   @Override
-   public Page<Customer> findCustomer(PageRequest pageRequest){
-        return customerRepository.findAll(pageRequest);
-   }
+    @Override
+    public BaseResponse<Page<Customer>> findCustomer(PageRequest pageRequest) {
+        BaseResponse rs = new BaseResponse();
+        rs.setBody(customerRepository.findAll(pageRequest));
+        rs.setCode("00");
 
-   @Override
-    public void deleteCustomer(Integer id){
-        customerRepository.deleteById(id);
-   }
-
-   @Override
-   public void updateCustomer(Customer body) throws Exception{
-       Customer customer = customerRepository.findById(body.getId())
-               .orElseThrow(() -> new Exception("not_found"));
-
-       customer.setUserName(body.getUserName());
-       customer.setEmail(body.getEmail());
-       customer.setAge(body.getAge());
-
-       customerRepository.save(customer);
-
-   }
+        return rs;
+    }
 
     @Override
-    public Page<Customer> getCustomerByUserName(String userName, PageRequest pageRequest){
-        return customerRepository.getCustomerByUserName(userName,pageRequest);
+    public void deleteCustomer(Integer id) {
+        customerRepository.deleteById(id);
+    }
+
+    @Override
+    public void updateCustomer(Customer body) throws Exception {
+        Customer customer = customerRepository.findById(body.getId())
+                .orElseThrow(() -> new Exception("not_found"));
+
+        customer.setUserName(body.getUserName());
+        customer.setEmail(body.getEmail());
+        customer.setAge(body.getAge());
+
+        customerRepository.save(customer);
+
+    }
+
+    @Override
+    public BaseResponse<Page<Customer>> getCustomerByUserName(String userName, PageRequest pageRequest) {
+        BaseResponse rs = new BaseResponse();
+        rs.setBody(customerRepository.getCustomerByUserName(userName, pageRequest));
+        rs.setCode("00");
+
+        return rs;
     }
 
 }

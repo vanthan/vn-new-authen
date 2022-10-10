@@ -32,12 +32,14 @@ public class CustomerController {
 //    }
 
     @PostMapping("/getCustomer")
-    public Page<Customer> findCustomer(@RequestBody Paging body){
+    public ResponseEntity<BaseResponse<Page<Customer>>> findCustomer(@RequestBody Paging body){
         Paging paging =new Paging();
         paging.setPageNum(body.getPageNum());
         paging.setTotalNum(body.getTotalNum());
         PageRequest pageRequest = PageRequest.of(body.getPageNum(), body.getTotalNum());
-        return customerService.findCustomer(pageRequest);
+        BaseResponse<Page<Customer>> rs =  customerService.findCustomer(pageRequest);
+        return ResponseEntity.ok(rs);
+
     }
 
     @DeleteMapping("/deleteCustomer/{id}")
@@ -51,11 +53,13 @@ public class CustomerController {
     }
 
     @PostMapping("/search-userName")
-    public Page<Customer> getCustomerByUserName(@RequestParam(value = "userName") String userName, @RequestBody Paging paging){
+    public ResponseEntity<BaseResponse<Page<Customer>>> getCustomerByUserName(@RequestParam(value = "userName") String userName, @RequestBody Paging paging){
         Paging paging1 =new Paging();
         paging1.setPageNum(paging.getPageNum());
         paging1.setTotalNum(paging.getTotalNum());
         PageRequest pageRequest = PageRequest.of(paging.getPageNum(), paging.getTotalNum());
-        return customerService.getCustomerByUserName(userName,pageRequest);
+        BaseResponse<Page<Customer>> rs = customerService.getCustomerByUserName(userName,pageRequest);
+
+        return ResponseEntity.ok(rs);
     }
 }
