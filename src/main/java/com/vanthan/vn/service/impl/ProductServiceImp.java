@@ -1,9 +1,6 @@
 package com.vanthan.vn.service.impl;
 
-import com.vanthan.vn.dto.BaseResponse;
-import com.vanthan.vn.dto.ProductForm;
-import com.vanthan.vn.dto.RegisterResult;
-import com.vanthan.vn.dto.UserInfo;
+import com.vanthan.vn.dto.*;
 import com.vanthan.vn.jwt.AuthEntryPointJwt;
 import com.vanthan.vn.jwt.AuthTokenFilter;
 import com.vanthan.vn.jwt.JwtUtils;
@@ -19,6 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpServletRequest;
@@ -110,5 +108,14 @@ public class ProductServiceImp implements ProductService {
         productRepository.deleteById(id);
         response.setMessage("Deleted successfully!");
         return response;
+    }
+
+    @Override
+    public BaseResponse<Page<Product>> searchProductByName(String name, PageRequest pageRequest) {
+        BaseResponse rs = new BaseResponse();
+        rs.setBody(productRepository.searchProductByName(name, pageRequest));
+        rs.setCode("00");
+
+        return rs;
     }
 }

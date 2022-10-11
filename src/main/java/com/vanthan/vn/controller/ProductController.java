@@ -46,4 +46,15 @@ public class ProductController {
     public BaseResponse<String> deleteProduct(@PathVariable int id) {
         return productService.deleteById(id);
     }
+
+    @PostMapping("search/{name}")
+    public ResponseEntity<BaseResponse<Page<Product>>> searchProduct(@PathVariable String name, @RequestBody Paging paging){
+        Paging paging1 =new Paging();
+        paging1.setPageNum(paging.getPageNum());
+        paging1.setTotalNum(paging.getTotalNum());
+        PageRequest pageRequest = PageRequest.of(paging.getPageNum(), paging.getTotalNum());
+        BaseResponse<Page<Product>> rs = productService.searchProductByName(name,pageRequest);
+
+        return ResponseEntity.ok(rs);
+    }
 }
