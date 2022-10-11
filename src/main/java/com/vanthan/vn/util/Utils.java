@@ -2,6 +2,9 @@ package com.vanthan.vn.util;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.vanthan.vn.model.User;
+import com.vanthan.vn.service.LoginService;
+import org.springframework.security.core.Authentication;
 
 public class Utils {
     static  ObjectMapper objectMapper = new ObjectMapper();

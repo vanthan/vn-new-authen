@@ -4,6 +4,7 @@ import com.vanthan.vn.dto.*;
 import com.vanthan.vn.jwt.AuthEntryPointJwt;
 import com.vanthan.vn.jwt.AuthTokenFilter;
 import com.vanthan.vn.jwt.JwtUtils;
+import com.vanthan.vn.model.Customer;
 import com.vanthan.vn.model.Paging;
 import com.vanthan.vn.model.Product;
 import com.vanthan.vn.repository.ProductRepository;
@@ -118,4 +119,13 @@ public class ProductServiceImp implements ProductService {
 
         return rs;
     }
+
+    @Override
+    public BaseResponse<Optional<Product>> findById(Integer id) {
+        BaseResponse response = new BaseResponse();
+        response.setBody(productRepository.findById(id));
+
+        return response;
+    }
+
 }
