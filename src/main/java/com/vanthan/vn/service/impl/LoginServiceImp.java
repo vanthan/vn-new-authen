@@ -11,7 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
-public class LoginServiceImpl implements LoginService {
+public class LoginServiceImp implements LoginService {
 
     @Autowired
     private LoginRespository loginRepository;
@@ -38,7 +38,7 @@ public class LoginServiceImpl implements LoginService {
         registerResult.setToken(jwtUtils.generateJwtToken(userInfo));
         UserToken token = new UserToken();
         token.setToken(registerResult.getToken());
-        token.setUser_id(user.getId());
+        token.setUserId(user.getId());
         userTokenRespository.save(token);
 
         LoginResponse logRes = new LoginResponse();

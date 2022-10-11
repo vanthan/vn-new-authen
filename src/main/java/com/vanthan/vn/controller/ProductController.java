@@ -3,16 +3,18 @@ package com.vanthan.vn.controller;
 import com.vanthan.vn.dto.BaseResponse;
 import com.vanthan.vn.dto.ProductForm;
 import com.vanthan.vn.dto.RegisterResult;
-import com.vanthan.vn.repository.ProductRepository;
-import com.vanthan.vn.service.ImpAuthen;
+import com.vanthan.vn.model.Paging;
+import com.vanthan.vn.model.Product;
 import com.vanthan.vn.service.ProductService;
-import com.vanthan.vn.service.impl.ProductServiceImp;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+
+import javax.servlet.http.HttpServletRequest;
+import java.util.List;
 
 @RestController
 @RequestMapping(value = "/")
@@ -22,8 +24,37 @@ public class ProductController {
     private ProductService productService;
 
     @PostMapping(value = "products")
-    public ResponseEntity<BaseResponse<RegisterResult>> createProduct(@RequestBody ProductForm body) {
-        return ResponseEntity.ok(productService.createProduct(body));
+    public ResponseEntity<BaseResponse<Product>> createProduct(@RequestBody ProductForm body, HttpServletRequest request){
+        return ResponseEntity.ok(productService.createProduct(body, request));
     }
 
+    @PostMapping(value = "getProducts")
+    public BaseResponse<Page<Product>> getProducts(@RequestBody Paging body) {
+        Paging paging = new Paging();
+        paging.setPageNum(body.getPageNum());
+        paging.setTotalNum(body.getTotalNum());
+        PageRequest pageRequest = PageRequest.of(body.getPageNum(), body.getTotalNum());
+        return productService.getProducts(pageRequest);
+    }
+
+    @PutMapping(value = "products/{id}")
+    public BaseResponse<Product> updateProduct(@PathVariable int id, @RequestBody Product product) {
+        return productService.updateById(product);
+    }
+
+    @DeleteMapping(value ="products/{id}")
+    public BaseResponse<String> deleteProduct(@PathVariable int id) {
+        return productService.deleteById(id);
+    }
+
+    @PostMapping("search/{name}")
+    public ResponseEntity<BaseResponse<Page<Product>>> searchProduct(@PathVariable String name, @RequestBody Paging paging){
+        Paging paging1 =new Paging();
+        paging1.setPageNum(paging.getPageNum());
+        paging1.setTotalNum(paging.getTotalNum());
+        PageRequest pageRequest = PageRequest.of(paging.getPageNum(), paging.getTotalNum());
+        BaseResponse<Page<Product>> rs = productService.searchProductByName(name,pageRequest);
+
+        return ResponseEntity.ok(rs);
+    }
 }

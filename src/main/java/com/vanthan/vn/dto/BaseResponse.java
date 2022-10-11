@@ -7,7 +7,6 @@ public class BaseResponse<T> {
     private String code;
     private String message;
     private T body;
-
     public BaseResponse() {
         this.code = "00"; // default code  -> ENUM OR CONFIG
         this.message = "success";

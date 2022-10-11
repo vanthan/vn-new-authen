@@ -14,5 +14,5 @@ public class UserToken {
     @GeneratedValue(strategy= GenerationType.AUTO)
     private int id;
     private String token;
-    private int user_id;
+    private int userId;
 }

@@ -2,6 +2,7 @@ package com.vanthan.vn.jwt;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.function.Function;
 
 import com.vanthan.vn.dto.UserInfo;
 import com.vanthan.vn.util.Utils;
@@ -26,9 +27,9 @@ public class JwtUtils {
 
     public String generateJwtToken(@NotNull UserInfo userInfo) {
         Map<String, Object> claims = new HashMap<>();
-        claims.put("ID", userInfo.getUserId());
+        claims.put("id", userInfo.getUserId());
         claims.put("userName", userInfo.getUserName());
-        claims.put("Email", userInfo.getEmail());
+        claims.put("email", userInfo.getEmail());
 
         return Jwts.builder()
                 .setSubject(userInfo.getUserName())
@@ -61,4 +62,24 @@ public class JwtUtils {
 
         return false;
     }
+    /*
+
+     */
+    public String getUsernameFromToken(String token) {
+        return getClaimFromToken(token, Claims::getSubject);
+    }
+
+    public <T> T getClaimFromToken(String token, Function<Claims, T> claimsResolver) {
+        final Claims claims = getAllClaimsFromToken(token);
+        return claimsResolver.apply(claims);
+    }
+
+    public Date getExpirationDateFromToken(String token) {
+        return getClaimFromToken(token, Claims::getExpiration);
+    }
+
+    private Claims getAllClaimsFromToken(String token) {
+        return Jwts.parser().setSigningKey(jwtSecret).parseClaimsJws(token).getBody();
+    }
+
 }
