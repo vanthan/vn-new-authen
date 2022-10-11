@@ -41,7 +41,7 @@ public class CustomerServiceImpl implements CustomerService {
     }
 
     @Override
-    public BaseResponse<Optional<Customer>> findById(Integer id){
+    public BaseResponse<Optional<Customer>> findById(Integer id) {
         BaseResponse response = new BaseResponse();
         response.setBody(customerRepository.findById(id));
 //        response.setCode("00");
@@ -60,12 +60,16 @@ public class CustomerServiceImpl implements CustomerService {
     }
 
     @Override
-    public void deleteCustomer(Integer id) {
+    public BaseResponse<Customer> deleteCustomer(Integer id) {
+        BaseResponse rs = new BaseResponse();
         customerRepository.deleteById(id);
+        rs.setMessage("Delete success!");
+
+        return rs;
     }
 
     @Override
-    public void updateCustomer(Customer body) throws Exception {
+    public BaseResponse<Customer> updateCustomer(Customer body) throws Exception {
         Customer customer = customerRepository.findById(body.getId())
                 .orElseThrow(() -> new Exception("not_found"));
 
@@ -73,7 +77,11 @@ public class CustomerServiceImpl implements CustomerService {
         customer.setEmail(body.getEmail());
         customer.setAge(body.getAge());
 
-        customerRepository.save(customer);
+        BaseResponse rs = new BaseResponse();
+        rs.setBody(customerRepository.save(customer));
+        rs.setMessage("Update Customer successfully");
+
+        return rs;
 
     }
 

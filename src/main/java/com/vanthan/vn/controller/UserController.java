@@ -16,7 +16,7 @@ public class UserController {
     private ImpAuthen authen;
 
     @PostMapping(value = "/register")
-    public ResponseEntity<BaseResponse<RegisterResult>> register(@RequestBody RegisterForm body){
+    public ResponseEntity<BaseResponse<RegisterResult>> register(@RequestBody RegisterForm body) {
         return ResponseEntity.ok(authen.register(body));
     }
 

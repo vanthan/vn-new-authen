@@ -19,7 +19,7 @@ public class CustomerController {
     CustomerService customerService;
 
     @PostMapping("/saveCustomer")
-    public ResponseEntity<BaseResponse<String >> saveCustomer(@RequestBody Customer body){
+    public ResponseEntity<BaseResponse<String>> saveCustomer(@RequestBody Customer body) {
         return ResponseEntity.ok(customerService.saveCustomer(body));
     }
 //    @GetMapping("/getCustomer")
@@ -29,39 +29,42 @@ public class CustomerController {
 //    }
 
     @GetMapping("/customerDetail/{id}")
-    public ResponseEntity<BaseResponse<Optional<Customer>>> findById(@PathVariable Integer id){
+    public ResponseEntity<BaseResponse<Optional<Customer>>> findById(@PathVariable Integer id) {
         BaseResponse<Optional<Customer>> response = customerService.findById(id);
         return ResponseEntity.ok(response);
     }
 
     @PostMapping("/getCustomer")
-    public ResponseEntity<BaseResponse<Page<Customer>>> findCustomer(@RequestBody Paging body){
-        Paging paging =new Paging();
+    public ResponseEntity<BaseResponse<Page<Customer>>> findCustomer(@RequestBody Paging body) {
+        Paging paging = new Paging();
         paging.setPageNum(body.getPageNum());
         paging.setTotalNum(body.getTotalNum());
         PageRequest pageRequest = PageRequest.of(body.getPageNum(), body.getTotalNum());
-        BaseResponse<Page<Customer>> rs =  customerService.findCustomer(pageRequest);
+        BaseResponse<Page<Customer>> rs = customerService.findCustomer(pageRequest);
         return ResponseEntity.ok(rs);
 
     }
 
     @DeleteMapping("/deleteCustomer/{id}")
-    public void deleteCutomer(@PathVariable Integer id){
-        customerService.deleteCustomer(id);
+    public ResponseEntity<BaseResponse<Customer>> deleteCutomer(@PathVariable Integer id) {
+        BaseResponse<Customer> rs = customerService.deleteCustomer(id);
+        return ResponseEntity.ok(rs);
+        
     }
 
     @PutMapping("/updateCustomer")
-    public void updateCustomer(@RequestBody Customer body) throws Exception {
-        customerService.updateCustomer(body);
+    public ResponseEntity<BaseResponse<Customer>> updateCustomer(@RequestBody Customer body) throws Exception {
+        BaseResponse<Customer> rs = customerService.updateCustomer(body);
+        return ResponseEntity.ok(rs);
     }
 
     @PostMapping("/search-userName")
-    public ResponseEntity<BaseResponse<Page<Customer>>> getCustomerByUserName(@RequestParam(value = "userName") String userName, @RequestBody Paging paging){
-        Paging paging1 =new Paging();
+    public ResponseEntity<BaseResponse<Page<Customer>>> getCustomerByUserName(@RequestParam(value = "userName") String userName, @RequestBody Paging paging) {
+        Paging paging1 = new Paging();
         paging1.setPageNum(paging.getPageNum());
         paging1.setTotalNum(paging.getTotalNum());
         PageRequest pageRequest = PageRequest.of(paging.getPageNum(), paging.getTotalNum());
-        BaseResponse<Page<Customer>> rs = customerService.getCustomerByUserName(userName,pageRequest);
+        BaseResponse<Page<Customer>> rs = customerService.getCustomerByUserName(userName, pageRequest);
 
         return ResponseEntity.ok(rs);
     }

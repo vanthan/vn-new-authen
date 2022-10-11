@@ -17,11 +17,11 @@ public class LoginController {
     LoginService loginService;
 
     @PostMapping(value = "/login")
-    public ResponseEntity<BaseResponse<LoginResponse>> login(@RequestBody UserDTO body){
+    public ResponseEntity<BaseResponse<LoginResponse>> login(@RequestBody UserDTO body) {
 
-        try{
+        try {
             return ResponseEntity.ok(loginService.checkLogin(body));
-        }catch (Exception e){
+        } catch (Exception e) {
             return ResponseEntity.badRequest().body(new BaseResponse(null, e.getMessage()));
         }
     }

@@ -29,7 +29,7 @@ public class AuthenServiceImp implements ImpAuthen {
         BaseResponse response = new BaseResponse<RegisterResult>();
         //check user by user name
         user = userRepository.findByUsername(body.getUsername());
-        if (user != null){
+        if (user != null) {
             response.setCode("001");
             response.setMessage("User already existed");
             return response;

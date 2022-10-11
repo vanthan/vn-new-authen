@@ -22,7 +22,7 @@ public class ProductController {
     private ProductService productService;
 
     @PostMapping(value = "products")
-    public ResponseEntity<BaseResponse<RegisterResult>> createProduct(@RequestBody ProductForm body){
+    public ResponseEntity<BaseResponse<RegisterResult>> createProduct(@RequestBody ProductForm body) {
         return ResponseEntity.ok(productService.createProduct(body));
     }
 

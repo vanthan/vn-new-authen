@@ -13,9 +13,9 @@ public interface CustomerService {
 
     BaseResponse<Page<Customer>>  findCustomer(PageRequest pageRequest);
 
-    void deleteCustomer(Integer id);
+    BaseResponse<Customer> deleteCustomer(Integer id);
 
-    void updateCustomer(Customer body) throws Exception;
+    BaseResponse<Customer> updateCustomer(Customer body) throws Exception;
 
     BaseResponse<Page<Customer>> getCustomerByUserName(String userName,PageRequest pageRequest);
 

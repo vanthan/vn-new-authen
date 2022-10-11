@@ -13,7 +13,7 @@ public class TokenServiceImpl implements TokenService {
     private UserTokenRespository userTokenRespository;
 
     @Override
-    public void saveToken(UserToken token){
+    public void saveToken(UserToken token) {
         userTokenRespository.save(token);
     }
 }
