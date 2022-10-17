@@ -14,6 +14,7 @@ import io.jsonwebtoken.Claims;
 import lombok.extern.log4j.Log4j2;
 import org.apache.kafka.common.errors.ResourceNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -41,6 +42,9 @@ public class ProductServiceImp implements ProductService {
     @Autowired
     AuthTokenFilter authTokenFilter;
 
+    @Value("${upload.path}")
+    private String fileUpload;
+
     @Override
     public BaseResponse<Product> createProduct(ProductForm form, HttpServletRequest request) {
         BaseResponse response = new BaseResponse<RegisterResult>();
@@ -62,7 +66,9 @@ public class ProductServiceImp implements ProductService {
         // create new product
         Product product1 = new Product();
         product1.setSku(form.getSku());
+//        product1.setImage(form.getImage());
         product1.setName(form.getName());
+        product1.setPrice(form.getPrice());
         product1.setQuantity(form.getQuantity());
         product1.setCreatedBy(username);
 
@@ -93,7 +99,9 @@ public class ProductServiceImp implements ProductService {
 
         // update
         updateProduct.setSku(product.getSku());
+        updateProduct.setImage(product.getImage());
         updateProduct.setName(product.getName());
+        updateProduct.setPrice(product.getPrice());
         updateProduct.setQuantity(product.getQuantity());
 
         // save to db
