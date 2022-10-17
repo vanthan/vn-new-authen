@@ -1,8 +1,8 @@
 package com.vanthan.vn.controller;
 
 import com.vanthan.vn.dto.BaseResponse;
-import com.vanthan.vn.model.Customer;
 import com.vanthan.vn.model.Paging;
+import com.vanthan.vn.model.entity.Customer;
 import com.vanthan.vn.service.CustomerService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.Optional;
 
 @RestController
-public class CustomerController {
+public class CustomerController extends BaseController {
 
     @Autowired
     CustomerService customerService;
@@ -49,7 +49,7 @@ public class CustomerController {
     public ResponseEntity<BaseResponse<Customer>> deleteCutomer(@PathVariable Integer id) {
         BaseResponse<Customer> rs = customerService.deleteCustomer(id);
         return ResponseEntity.ok(rs);
-        
+
     }
 
     @PutMapping("/updateCustomer")

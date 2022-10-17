@@ -2,30 +2,21 @@ package com.vanthan.vn.controller;
 
 import com.vanthan.vn.dto.BaseResponse;
 import com.vanthan.vn.dto.ProductForm;
-import com.vanthan.vn.dto.RegisterResult;
-import com.vanthan.vn.model.Customer;
 import com.vanthan.vn.model.Paging;
-import com.vanthan.vn.model.Product;
+import com.vanthan.vn.model.entity.Product;
 import com.vanthan.vn.service.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.ResponseEntity;
-import org.springframework.util.FileCopyUtils;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
-
 
 import javax.servlet.http.HttpServletRequest;
-import java.io.File;
-import java.io.IOException;
-import java.util.List;
 import java.util.Optional;
 
 @RestController
-@RequestMapping(value = "/")
-public class ProductController {
+@RequestMapping(value = "/api")
+public class ProductController extends BaseController {
 
     @Autowired
     private ProductService productService;

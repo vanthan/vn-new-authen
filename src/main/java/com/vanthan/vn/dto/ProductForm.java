@@ -8,6 +8,6 @@ public class ProductForm {
     private String sku;
     private String name;
     private float price;
-    private MultipartFile image;
+    private String image;
     private int quantity;
 }

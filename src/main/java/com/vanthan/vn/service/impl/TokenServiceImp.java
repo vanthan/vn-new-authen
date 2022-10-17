@@ -1,6 +1,6 @@
 package com.vanthan.vn.service.impl;
 
-import com.vanthan.vn.model.UserToken;
+import com.vanthan.vn.model.entity.UserToken;
 import com.vanthan.vn.repository.UserTokenRespository;
 import com.vanthan.vn.service.TokenService;
 import org.springframework.beans.factory.annotation.Autowired;

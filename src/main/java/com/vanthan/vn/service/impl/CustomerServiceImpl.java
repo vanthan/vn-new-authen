@@ -1,7 +1,7 @@
 package com.vanthan.vn.service.impl;
 
 import com.vanthan.vn.dto.BaseResponse;
-import com.vanthan.vn.model.Customer;
+import com.vanthan.vn.model.entity.Customer;
 import com.vanthan.vn.repository.CustomerRepository;
 import com.vanthan.vn.service.CustomerService;
 import org.springframework.beans.factory.annotation.Autowired;

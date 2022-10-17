@@ -5,8 +5,8 @@ import com.vanthan.vn.dto.RegisterForm;
 import com.vanthan.vn.dto.RegisterResult;
 import com.vanthan.vn.dto.UserInfo;
 import com.vanthan.vn.jwt.JwtUtils;
-import com.vanthan.vn.model.User;
-import com.vanthan.vn.model.UserToken;
+import com.vanthan.vn.model.entity.User;
+import com.vanthan.vn.model.entity.UserToken;
 import com.vanthan.vn.repository.UserRepository;
 import com.vanthan.vn.repository.UserTokenRespository;
 import com.vanthan.vn.service.ImpAuthen;
@@ -16,12 +16,11 @@ import org.springframework.stereotype.Service;
 @Service
 public class AuthenServiceImp implements ImpAuthen {
     @Autowired
+    JwtUtils jwtUtils;
+    @Autowired
     private UserRepository userRepository;
     @Autowired
     private UserTokenRespository tokenRespository;
-
-    @Autowired
-    JwtUtils jwtUtils;
 
     @Override
     public BaseResponse<RegisterResult> register(RegisterForm body) {

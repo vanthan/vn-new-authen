@@ -1,6 +1,6 @@
 package com.vanthan.vn.repository;
 
-import com.vanthan.vn.model.User;
+import com.vanthan.vn.model.entity.User;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 

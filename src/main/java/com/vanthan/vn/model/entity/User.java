@@ -1,7 +1,6 @@
-package com.vanthan.vn.model;
+package com.vanthan.vn.model.entity;
 
 
-import lombok.AllArgsConstructor;
 import lombok.Data;
 
 import javax.persistence.*;
@@ -13,7 +12,7 @@ import java.sql.Timestamp;
 @Data
 public class User {
     @Id
-    @GeneratedValue(strategy= GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private int id;
     private String fullName;
     private String email;

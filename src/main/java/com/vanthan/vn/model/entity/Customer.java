@@ -1,4 +1,4 @@
-package com.vanthan.vn.model;
+package com.vanthan.vn.model.entity;
 
 import lombok.Data;
 
@@ -7,9 +7,9 @@ import javax.persistence.*;
 @Entity
 @Table(name = "vn_customer")
 @Data
-public class Customer{
+public class Customer {
     @Id
-    @GeneratedValue(strategy= GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private int id;
     @Column(name = "user_name")
     private String userName;

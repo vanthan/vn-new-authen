@@ -2,8 +2,8 @@ package com.vanthan.vn.service.impl;
 
 import com.vanthan.vn.dto.*;
 import com.vanthan.vn.jwt.JwtUtils;
-import com.vanthan.vn.model.User;
-import com.vanthan.vn.model.UserToken;
+import com.vanthan.vn.model.entity.User;
+import com.vanthan.vn.model.entity.UserToken;
 import com.vanthan.vn.repository.LoginRespository;
 import com.vanthan.vn.repository.UserTokenRespository;
 import com.vanthan.vn.service.LoginService;
@@ -14,11 +14,9 @@ import org.springframework.stereotype.Service;
 public class LoginServiceImp implements LoginService {
 
     @Autowired
-    private LoginRespository loginRepository;
-
-    @Autowired
     JwtUtils jwtUtils;
-
+    @Autowired
+    private LoginRespository loginRepository;
     @Autowired
     private UserTokenRespository userTokenRespository;
 
