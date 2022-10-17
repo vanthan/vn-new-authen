@@ -7,9 +7,9 @@ import com.vanthan.vn.model.Paging;
 import com.vanthan.vn.model.Product;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.http.ResponseEntity;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.Optional;
 import java.util.List;
 
 public interface ProductService {
@@ -20,4 +20,6 @@ public interface ProductService {
 
     BaseResponse<String> deleteById(int id);
     BaseResponse<Page<Product>> searchProductByName(String name, PageRequest request);
+
+    BaseResponse<Optional<Product>> findById(Integer id);
 }
