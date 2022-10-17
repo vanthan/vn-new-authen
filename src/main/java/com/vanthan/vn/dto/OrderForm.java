@@ -2,9 +2,9 @@ package com.vanthan.vn.dto;
 
 import lombok.Data;
 
+import java.util.List;
+
 @Data
 public class OrderForm {
-    private int productId;
-    private String productName;
-    private int number;
+    private List<OrderLineForm> orderLines;
 }
