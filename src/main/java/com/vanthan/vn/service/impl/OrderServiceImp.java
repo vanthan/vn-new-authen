@@ -1,6 +1,8 @@
 package com.vanthan.vn.service.impl;
 
 import com.vanthan.vn.dto.*;
+import com.vanthan.vn.jwt.AuthTokenFilter;
+import com.vanthan.vn.jwt.JwtUtils;
 import com.vanthan.vn.model.Order;
 import com.vanthan.vn.model.Product;
 import com.vanthan.vn.repository.OrderRepository;
@@ -9,13 +11,16 @@ import com.vanthan.vn.service.OrderService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 @Service
 public class OrderServiceImp implements OrderService {
     private final OrderRepository orderRepository;
     private final ProductRepository productRepository;
+
 
     @Autowired
     public OrderServiceImp(OrderRepository orderRepository, ProductRepository productRepository) {
@@ -25,7 +30,7 @@ public class OrderServiceImp implements OrderService {
 
     @Override
     public BaseResponse<OrderResult> createOrder(OrderForm form) {
-        BaseResponse response = new BaseResponse<OrderResult>();
+        BaseResponse<OrderResult> response = new BaseResponse<>();
         // find product
         Optional<Product> maybeProduct = productRepository.findById(form.getProductId());
         if (!maybeProduct.isPresent()) {
@@ -41,11 +46,15 @@ public class OrderServiceImp implements OrderService {
         // save product details
         productRepository.save(product);
 
+
         // save order
         orderRepository.save(order);
+        // create order result
+        OrderResult result = new OrderResult();
+       // result.getId(form.)
         response.setCode("00");
         response.setMessage("Created an order");
-        response.setBody(order);
+        response.setBody(result);
         return response;
     }
 }
