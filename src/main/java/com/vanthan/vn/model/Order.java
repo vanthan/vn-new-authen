@@ -1,23 +1,27 @@
 package com.vanthan.vn.model;
 
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
 
 @Entity
-@Table(name = "...")
+@Table(name = "vn_order")
 @Data
+@NoArgsConstructor
 public class Order {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
+    private int userId;
+    private int productId;
+    private int quantity;
 
-    @OneToMany(targetEntity = OrderLine.class)
-    private List<OrderLine> orderLines = new ArrayList<>();
-
-    public void addOrderLine(Product product, int quantity) {
-        this.orderLines.add(new OrderLine(product, quantity, this));
+    public Order(int userId, int productId, int quantity) {
+        this.userId = userId;
+        this.productId = productId;
+        this.quantity = quantity;
     }
 }

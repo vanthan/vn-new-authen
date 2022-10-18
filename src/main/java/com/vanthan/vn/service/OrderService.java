@@ -1,8 +1,9 @@
 package com.vanthan.vn.service;
 
+import com.vanthan.vn.dto.BaseResponse;
 import com.vanthan.vn.dto.OrderForm;
 import com.vanthan.vn.dto.OrderResult;
 
 public interface OrderService {
-    OrderResult createOrder(OrderForm form);
+    BaseResponse<OrderResult> createOrder(OrderForm form);
 }

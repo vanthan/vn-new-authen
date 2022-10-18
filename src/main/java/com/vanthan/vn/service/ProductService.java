@@ -21,5 +21,4 @@ public interface ProductService {
     BaseResponse<String> deleteById(int id);
     BaseResponse<Page<Product>> searchProductByName(String name, PageRequest request);
 
-    BaseResponse<Optional<Product>> findById(Integer id);
 }

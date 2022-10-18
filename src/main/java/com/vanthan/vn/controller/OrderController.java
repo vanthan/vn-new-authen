@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.Optional;
 
-@RestController("/orders")
+@RestController
 public class OrderController {
 
     private final OrderService orderService;
@@ -22,13 +22,10 @@ public class OrderController {
         this.orderService = orderService;
     }
 
-    @PostMapping
+    @PostMapping(value = "/orders")
     public ResponseEntity<BaseResponse<OrderResult>> createOrder(@RequestBody OrderForm form) {
         try {
-            final BaseResponse<OrderResult> response = new BaseResponse<>();
-            OrderResult result = orderService.createOrder(form);
-            response.setBody(result);
-            return ResponseEntity.ok(response);
+            return ResponseEntity.ok(orderService.createOrder(form));
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(new BaseResponse<>(null, e.getMessage()));
         }

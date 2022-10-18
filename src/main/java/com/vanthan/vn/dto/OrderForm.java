@@ -6,5 +6,7 @@ import java.util.List;
 
 @Data
 public class OrderForm {
-    private List<OrderLineForm> orderLines;
+    private int productId;
+    private int quantity;
+    private int userId;
 }
