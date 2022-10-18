@@ -21,6 +21,7 @@ public class BaseResponse<T> {
     }
 
     public BaseResponse(T body, String message) {
+        this.code = "00";
         this.message = message;
         this.body = body;
     }

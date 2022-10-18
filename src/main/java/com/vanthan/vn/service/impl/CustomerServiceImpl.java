@@ -54,7 +54,7 @@ public class CustomerServiceImpl implements CustomerService {
     public BaseResponse<Page<Customer>> findCustomer(PageRequest pageRequest) {
         BaseResponse rs = new BaseResponse();
         rs.setBody(customerRepository.findAll(pageRequest));
-        rs.setCode("00");
+//        rs.setCode("00");
 
         return rs;
     }
@@ -89,7 +89,7 @@ public class CustomerServiceImpl implements CustomerService {
     public BaseResponse<Page<Customer>> getCustomerByUserName(String userName, PageRequest pageRequest) {
         BaseResponse rs = new BaseResponse();
         rs.setBody(customerRepository.getCustomerByUserName(userName, pageRequest));
-        rs.setCode("00");
+//        rs.setCode("00");
 
         return rs;
     }

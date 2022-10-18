@@ -6,4 +6,7 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface UserTokenRespository extends CrudRepository<UserToken, Integer> {
+
+    UserToken findUserTokenByUserId(int userId);
+
 }

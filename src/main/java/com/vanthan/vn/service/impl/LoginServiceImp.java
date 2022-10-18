@@ -33,11 +33,22 @@ public class LoginServiceImp implements LoginService {
         userInfo.setUserName(user.getUsername());
         userInfo.setUserId(user.getId());
         userInfo.setEmail(user.getEmail());
-        registerResult.setToken(jwtUtils.generateJwtToken(userInfo));
-        UserToken token = new UserToken();
-        token.setToken(registerResult.getToken());
-        token.setUserId(user.getId());
+        String tokenValue = jwtUtils.generateJwtToken(userInfo);
+        registerResult.setToken(tokenValue);
+
+        //update token db
+        User user1 = loginRepository.findById(user.getId())
+                .orElseThrow(() -> new Exception("not_found"));
+        UserToken token = userTokenRespository.findUserTokenByUserId(user.getId());
+//        token.setToken(registerResult.getToken());
+        token.setToken(tokenValue);
+        token.setUserId(user1.getId());
         userTokenRespository.save(token);
+
+//        UserToken token = new UserToken();
+//        token.setToken(registerResult.getToken());
+//        token.setUserId(user.getId());
+//        userTokenRespository.save(token);
 
         LoginResponse logRes = new LoginResponse();
         logRes.setEmail(user.getEmail());
