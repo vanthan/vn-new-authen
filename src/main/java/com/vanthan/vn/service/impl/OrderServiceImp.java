@@ -36,7 +36,7 @@ public class OrderServiceImp implements OrderService {
         // get product
         Product product = maybeProduct.get();
         //create order
-        final Order order = new Order(form.getUserId(), form.getProductId(), form.getQuantity());
+        final Order order = new Order(form.getUserId());
         // update quantity in db
         product.setQuantity(product.getQuantity() - form.getQuantity());
         // save product details
