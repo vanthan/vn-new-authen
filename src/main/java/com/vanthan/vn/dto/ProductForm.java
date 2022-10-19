@@ -7,4 +7,5 @@ public class ProductForm {
     private String sku;
     private String name;
     private int quantity;
+    private int price;
 }

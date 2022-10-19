@@ -32,13 +32,11 @@ public class ProductServiceImp implements ProductService {
 
     @Autowired
     private ProductRepository productRepository;
-    @Autowired
-    private UserTokenRespository tokenRespository;
 
     @Autowired
-    JwtUtils jwtUtils;
+    private JwtUtils jwtUtils;
     @Autowired
-    AuthTokenFilter authTokenFilter;
+    private AuthTokenFilter authTokenFilter;
 
     @Override
     public BaseResponse<Product> createProduct(ProductForm form, HttpServletRequest request) {
@@ -53,7 +51,7 @@ public class ProductServiceImp implements ProductService {
             response.setMessage("SKU already existed!");
             return response;
         }
-        // get username from http request
+        // get username from http servlet request
         String token = authTokenFilter.parseJwt(request);
 
         Map<String,Object> userInfo = jwtUtils.getClaimFromToken(token, claims -> {return claims;});
@@ -63,6 +61,7 @@ public class ProductServiceImp implements ProductService {
         product1.setSku(form.getSku());
         product1.setName(form.getName());
         product1.setQuantity(form.getQuantity());
+        product1.setPrice(form.getPrice());
         product1.setCreatedBy(username);
 
         log.info("User info {}", userInfo);
@@ -94,6 +93,7 @@ public class ProductServiceImp implements ProductService {
         updateProduct.setSku(product.getSku());
         updateProduct.setName(product.getName());
         updateProduct.setQuantity(product.getQuantity());
+        updateProduct.setPrice(product.getPrice());
 
         // save to db
         productRepository.save(updateProduct);

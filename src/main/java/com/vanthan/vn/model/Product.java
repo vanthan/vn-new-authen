@@ -16,6 +16,7 @@ public class Product {
     private String sku;
     private String name;
     private int quantity;
+    private int price;
     private String createdBy;
 
     public Product() {

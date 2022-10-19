@@ -5,8 +5,8 @@ import lombok.Data;
 @Data
 public class OrderResult {
     private int id;
-    private String productName;
+    private int productId;
     private int quantity;
-    private double price;
     private String orderedBy;
+    private double total;
 }
