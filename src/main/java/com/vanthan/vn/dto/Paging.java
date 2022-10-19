@@ -1,4 +1,4 @@
-package com.vanthan.vn.model;
+package com.vanthan.vn.dto;
 
 import lombok.Data;
 

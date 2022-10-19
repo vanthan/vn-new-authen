@@ -2,7 +2,7 @@ package com.vanthan.vn.controller;
 
 import com.vanthan.vn.dto.BaseResponse;
 import com.vanthan.vn.dto.ProductForm;
-import com.vanthan.vn.model.Paging;
+import com.vanthan.vn.dto.Paging;
 import com.vanthan.vn.model.entity.Product;
 import com.vanthan.vn.service.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;

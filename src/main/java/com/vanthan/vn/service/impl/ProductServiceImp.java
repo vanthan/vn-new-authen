@@ -9,12 +9,15 @@ import com.vanthan.vn.model.entity.Product;
 import com.vanthan.vn.repository.ProductRepository;
 import com.vanthan.vn.repository.UserTokenRespository;
 import com.vanthan.vn.service.ProductService;
+import io.jsonwebtoken.Claims;
 import lombok.extern.log4j.Log4j2;
 import org.apache.kafka.common.errors.ResourceNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpServletRequest;
@@ -22,6 +25,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.function.Function;
 
 @Service
 @Log4j2
@@ -33,6 +37,7 @@ public class ProductServiceImp implements ProductService {
     AuthTokenFilter authTokenFilter;
     @Autowired
     private ProductRepository productRepository;
+
     @Autowired
     private UserTokenRespository tokenRespository;
     @Value("${upload.path}")

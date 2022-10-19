@@ -5,9 +5,11 @@ import com.vanthan.vn.dto.ProductForm;
 import com.vanthan.vn.model.entity.Product;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.http.ResponseEntity;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.Optional;
+import java.util.List;
 
 public interface ProductService {
     BaseResponse<Product> createProduct(ProductForm form, HttpServletRequest request);
