@@ -1,5 +1,6 @@
 package com.vanthan.vn.model.entity;
 
+import com.vanthan.vn.model.OrderLine;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -22,6 +23,7 @@ public class Order {
             cascade = CascadeType.ALL,
             orphanRemoval = true
     )
+
     private List<OrderLine> comments = new ArrayList<>();
 
     public Order(int userId) {

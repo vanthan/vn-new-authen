@@ -1,15 +1,17 @@
 package com.vanthan.vn.service.impl;
 
 import com.vanthan.vn.dto.*;
-import com.vanthan.vn.model.entity.Order;
+import com.vanthan.vn.jwt.AuthTokenFilter;
+import com.vanthan.vn.jwt.JwtUtils;
+import com.vanthan.vn.model.OrderLine;
+import com.vanthan.vn.model.TransactionDetail;
 import com.vanthan.vn.model.entity.Product;
-import com.vanthan.vn.repository.OrderRepository;
+import com.vanthan.vn.repository.OrderLineRepository;
 import com.vanthan.vn.repository.ProductRepository;
 import com.vanthan.vn.repository.TransactionDetailRepository;
 import com.vanthan.vn.service.OrderService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-;
 import javax.servlet.http.HttpServletRequest;
 import java.util.Map;
 import java.util.Optional;
@@ -69,7 +71,7 @@ public class OrderServiceImp implements OrderService {
         transactionDetail.setEmail(email);
         transactionDetail.setProductName(product.getName());
         transactionDetail.setQuantity(orderLine.getQuantity());
-        transactionDetail.setTotal(product.getPrice()*orderLine.getQuantity());
+        transactionDetail.setTotal((int) (product.getPrice()*orderLine.getQuantity()));
         transactionDetail.setStatus("pending");
         transactionDetail.setPaymentMethod("cash");
 
