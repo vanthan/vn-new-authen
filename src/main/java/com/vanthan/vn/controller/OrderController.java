@@ -5,6 +5,7 @@ import com.vanthan.vn.dto.OrderForm;
 import com.vanthan.vn.dto.OrderResult;
 import com.vanthan.vn.jwt.AuthTokenFilter;
 import com.vanthan.vn.jwt.JwtUtils;
+import com.vanthan.vn.model.TransactionDetail;
 import com.vanthan.vn.service.OrderService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpRequest;
@@ -21,27 +22,20 @@ public class OrderController {
 
     private final OrderService orderService;
 
-    private final JwtUtils jwtUtils;
+//    private final JwtUtils jwtUtils;
 
-    private final AuthTokenFilter authTokenFilter;
+//    private final AuthTokenFilter authTokenFilter;
 
     @Autowired
     public OrderController(OrderService orderService, JwtUtils jwtUtils, AuthTokenFilter authTokenFilter) {
         this.orderService = orderService;
-        this.jwtUtils = jwtUtils;
-        this.authTokenFilter = authTokenFilter;
     }
 
     @PostMapping(value = "/orders")
-    public ResponseEntity<BaseResponse<OrderResult>> createOrder(@RequestBody OrderForm form, HttpServletRequest request) {
+    public ResponseEntity<BaseResponse<TransactionDetail>> createOrder(@RequestBody OrderForm form, HttpServletRequest request) {
         try {
             // get username from http request
-            String token = authTokenFilter.parseJwt(request);
-            Map<String,Object> userInfo = jwtUtils.getClaimFromToken(token, claims -> {return claims;});
-            int userId = Integer.parseInt(userInfo.get("id").toString());
-            form.setUserId(userId);
-
-            return ResponseEntity.ok(orderService.createOrder(form));
+            return ResponseEntity.ok(orderService.createOrder(form,request));
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(new BaseResponse<>(null, e.getMessage()));
         }

@@ -17,6 +17,7 @@ public class Order {
     private int id;
     private int userId;
 
+    private int quantity;
     @OneToMany(
             cascade = CascadeType.ALL,
             orphanRemoval = true
