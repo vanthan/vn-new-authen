@@ -16,12 +16,16 @@ public class Order {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
     private int userId;
-    private int productId;
-    private int quantity;
 
-    public Order(int userId, int productId, int quantity) {
+    private int quantity;
+    @OneToMany(
+            cascade = CascadeType.ALL,
+            orphanRemoval = true
+    )
+    private List<OrderLine> comments = new ArrayList<>();
+
+    public Order(int userId) {
         this.userId = userId;
-        this.productId = productId;
-        this.quantity = quantity;
+
     }
 }
