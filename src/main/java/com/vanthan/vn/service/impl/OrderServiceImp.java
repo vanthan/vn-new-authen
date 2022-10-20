@@ -3,7 +3,7 @@ package com.vanthan.vn.service.impl;
 import com.vanthan.vn.dto.*;
 import com.vanthan.vn.jwt.AuthTokenFilter;
 import com.vanthan.vn.jwt.JwtUtils;
-import com.vanthan.vn.model.OrderLine;
+import com.vanthan.vn.model.Order;
 import com.vanthan.vn.model.Product;
 import com.vanthan.vn.model.TransactionDetail;
 import com.vanthan.vn.repository.OrderLineRepository;
@@ -14,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 ;
 import javax.servlet.http.HttpServletRequest;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
@@ -39,23 +40,30 @@ public class OrderServiceImp implements OrderService {
     @Override
     public BaseResponse<TransactionDetail> createOrder(OrderForm form, HttpServletRequest request) {
         BaseResponse<TransactionDetail> response = new BaseResponse<>();
+        final List<OrderLineForm> orderLines = form.getOrderLines();
+        final Order order = new Order();
         // find product
-        Optional<Product> maybeProduct = productRepository.findById(form.getProductId());
-        if (!maybeProduct.isPresent()) {
-            response.setCode("001");
-            response.setMessage("Product not found: " + form.getProductId());
-            return response;
+        for (OrderLineForm orderLine : orderLines) {
+            int productId = orderLine.getProductId();
+            int quantity = orderLine.getQuantity();
+
+            Optional<Product> maybeProduct = productRepository.findById(productId);
+            if (!maybeProduct.isPresent()) {
+                response.setCode("001");
+                response.setMessage("Product not found: " + productId);
+                return response;
+            }
+            // get product
+            Product product = maybeProduct.get();
+            // update quantity in db
+            product.setQuantity(product.getQuantity() - quantity);
+            // save update product details
+            productRepository.save(product);
+
         }
-        // get product
-        Product product = maybeProduct.get();
-        //create order
-        OrderLine orderLine = new OrderLine();
-        // update quantity in db
-        product.setQuantity(product.getQuantity() - form.getQuantity());
-        // save update product details
-        productRepository.save(product);
         // save order
-        orderRepository.save(orderLine);
+        orderRepository.save(order);
+
         // get info from token: email + full name
         String token = authTokenFilter.parseJwt(request);
 
