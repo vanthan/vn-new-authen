@@ -55,7 +55,7 @@ public class ProductServiceImp implements ProductService {
         String token = authTokenFilter.parseJwt(request);
 
         Map<String,Object> userInfo = jwtUtils.getClaimFromToken(token, claims -> {return claims;});
-        String username = userInfo.get("userName").toString();
+        String username = userInfo.get("username").toString();
         // create new product
         Product product1 = new Product();
         product1.setSku(form.getSku());

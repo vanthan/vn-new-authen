@@ -15,11 +15,9 @@ public class Order {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
+    private String deliveryCode;
+    private int customerId;
 
-    @OneToMany(targetEntity = OrderLine.class)
-    private List<OrderLine> orderLines = new ArrayList<>();
 
-    public void addOrderLine(Product product, int quantity) {
-        this.orderLines.add(new OrderLine(product, quantity));
-    }
 }
+

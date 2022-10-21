@@ -28,8 +28,8 @@ public class JwtUtils {
     public String generateJwtToken(@NotNull UserInfo userInfo) {
         Map<String, Object> claims = new HashMap<>();
         claims.put("id", userInfo.getUserId());
-        claims.put("userName", userInfo.getUserName());
         claims.put("email", userInfo.getEmail());
+        claims.put("username", userInfo.getUserName());
 
         return Jwts.builder()
                 .setSubject(userInfo.getUserName())
