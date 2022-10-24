@@ -1,6 +1,5 @@
-package com.vanthan.vn.model.entity;
+package com.vanthan.vn.model;
 
-import com.vanthan.vn.model.OrderLine;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -16,18 +15,9 @@ public class Order {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
-    private int userId;
+    private String deliveryCode;
+    private int customerId;
 
-    private int quantity;
-    @OneToMany(
-            cascade = CascadeType.ALL,
-            orphanRemoval = true
-    )
 
-    private List<OrderLine> comments = new ArrayList<>();
-
-    public Order(int userId) {
-        this.userId = userId;
-
-    }
 }
+

@@ -11,12 +11,12 @@ public class TransactionDetail {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private int id;
-    private String email;
+    private int orderId;
 //    private String fullName;
-    private String productName;
-    private int quantity;
+    private int count;
     private int total;
     private String status;
     private String paymentMethod;
+
 
 }

@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.List;
 import java.util.Map;
 
 @RestController
@@ -27,12 +28,12 @@ public class OrderController {
 //    private final AuthTokenFilter authTokenFilter;
 
     @Autowired
-    public OrderController(OrderService orderService, JwtUtils jwtUtils, AuthTokenFilter authTokenFilter) {
+    public OrderController(OrderService orderService) {
         this.orderService = orderService;
     }
 
     @PostMapping(value = "/orders")
-    public ResponseEntity<BaseResponse<TransactionDetail>> createOrder(@RequestBody OrderForm form, HttpServletRequest request) {
+    public ResponseEntity<BaseResponse<String>> createOrder(@RequestBody OrderForm form, HttpServletRequest request) {
         try {
             // get username from http request
             return ResponseEntity.ok(orderService.createOrder(form,request));
