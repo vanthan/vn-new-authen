@@ -16,6 +16,7 @@ import com.vanthan.vn.util.Utils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import javax.servlet.http.HttpServletRequest;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -42,10 +43,11 @@ public class OrderServiceImp implements OrderService {
     }
 
     @Override
-    public BaseResponse<String> createOrder(OrderForm form, HttpServletRequest request) {
-        BaseResponse<String> response = new BaseResponse<>();
+    public BaseResponse<OrderResult> createOrder(OrderForm form, HttpServletRequest request) {
+        BaseResponse<OrderResult> response = new BaseResponse<>();
         List<OrderLineForm> orderLines = form.getOrderLines();
         Order order = new Order();
+        List<OrderDetailResult> orderDetailResultList = new ArrayList<>();
 
         // get info from token: email + full name
         String token = authTokenFilter.parseJwt(request);
@@ -79,7 +81,7 @@ public class OrderServiceImp implements OrderService {
             Product product = maybeProduct.get();
             // update quantity in db
 
-            if (product.getQuantity() <= orderLine.getQuantity()){
+            if (product.getQuantity() < orderLine.getQuantity()){
                 throw new IllegalArgumentException("Product is out of stock: " + orderLine.getProductId());
             }
             product.setQuantity(product.getQuantity() - orderLine.getQuantity());
@@ -87,12 +89,20 @@ public class OrderServiceImp implements OrderService {
 
             // save update product details
             productRepository.save(product);
-            // save order detail
+            // save order detail - save to db
             OrderDetail orderDetail = new OrderDetail();
             orderDetail.setOrderId(order.getId());
             orderDetail.setProductId( orderLine.getProductId());
             orderDetail.setQuantity(orderLine.getQuantity());
             orderDetailRepository.save(orderDetail);
+            // ket qua cua service - 1 loai DTO o dang cu the
+            OrderDetailResult orderDetailResult = new OrderDetailResult();
+            orderDetailResult.setProductId(product.getId());
+            orderDetailResult.setProductName(product.getName());
+            orderDetailResult.setQuantity(orderLine.getQuantity());
+            orderDetailResult.setPrice(product.getPrice());
+
+            orderDetailResultList.add(orderDetailResult);
 
             //set transaction total
             transactionDetail.setTotal(transactionDetail.getTotal() + (product.getPrice() * orderLine.getQuantity()));
@@ -102,13 +112,12 @@ public class OrderServiceImp implements OrderService {
 
         response.setCode("00");
         response.setMessage("Created an order");
-        /*
-        convert from list to JSON object
-        */
-        //utils.convertObjectToString(orderLines);
-        Utils utils = new Utils();
-        response.setBody(utils.convertObjectToJson(orderLines));
-        //response.setBody(orderLines.toString());
+
+        // return response - OR la 1 object
+        OrderResult result = new OrderResult();
+        result.setId(order.getId());
+        result.setDetails(orderDetailResultList);
+        response.setBody(result);
         return response;
     }
 }

@@ -10,6 +10,6 @@ import java.util.List;
 @Data
 public class OrderResult {
     private int id;
-    private List<TransactionDetail> details;
+    private List<OrderDetailResult> details;
 
 }
