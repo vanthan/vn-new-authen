@@ -2,34 +2,31 @@ package com.vanthan.vn.controller;
 
 import com.vanthan.vn.dto.BaseResponse;
 import com.vanthan.vn.dto.OrderForm;
-import com.vanthan.vn.dto.OrderResult;
-import com.vanthan.vn.jwt.AuthTokenFilter;
-import com.vanthan.vn.jwt.JwtUtils;
+import com.vanthan.vn.model.Customer;
 import com.vanthan.vn.model.TransactionDetail;
 import com.vanthan.vn.service.OrderService;
+import com.vanthan.vn.service.TransactionDetailService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpRequest;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.List;
-import java.util.Map;
+import java.util.Optional;
 
 @RestController
 public class OrderController {
 
     private final OrderService orderService;
+    private final TransactionDetailService transactionDetailService;
 
 //    private final JwtUtils jwtUtils;
 
 //    private final AuthTokenFilter authTokenFilter;
 
     @Autowired
-    public OrderController(OrderService orderService) {
+    public OrderController(OrderService orderService, TransactionDetailService transactionDetailService) {
         this.orderService = orderService;
+        this.transactionDetailService = transactionDetailService;
     }
 
     @PostMapping(value = "/orders")
@@ -40,6 +37,12 @@ public class OrderController {
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(new BaseResponse<>(null, e.getMessage()));
         }
+    }
+
+    @GetMapping(value = "/getOrderDetail/{id}")
+    public BaseResponse<TransactionDetail> getTransactionDetail(@PathVariable int id) {
+        BaseResponse<TransactionDetail> response = transactionDetailService.findById(id);
+        return ResponseEntity.ok(response).getBody();
     }
 }
 

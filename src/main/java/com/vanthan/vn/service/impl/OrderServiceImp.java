@@ -12,9 +12,9 @@ import com.vanthan.vn.repository.OrderRepository;
 import com.vanthan.vn.repository.ProductRepository;
 import com.vanthan.vn.repository.TransactionDetailRepository;
 import com.vanthan.vn.service.OrderService;
+import com.vanthan.vn.util.Utils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-;
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 import java.util.Map;
@@ -47,17 +47,16 @@ public class OrderServiceImp implements OrderService {
         List<OrderLineForm> orderLines = form.getOrderLines();
         Order order = new Order();
 
-
         // get info from token: email + full name
         String token = authTokenFilter.parseJwt(request);
 
         Map<String,Object> userInfo = jwtUtils.getClaimFromToken(token, claims -> {return claims;});
         int userid = Integer.parseInt(userInfo.get("id").toString());
-        String email = userInfo.get("email").toString();
-        String username = userInfo.get("username").toString();
+//        String email = userInfo.get("email").toString();
+//        String username = userInfo.get("username").toString();
 
         // save order
-        order.setDeliveryCode("mamama");
+        order.setDeliveryCode(order.generateRandomCode());
         order.setCustomerId(userid);
         orderRepository.save(order);
 
@@ -70,7 +69,7 @@ public class OrderServiceImp implements OrderService {
 
         // find product
         for (OrderLineForm orderLine : orderLines) {
-            Optional<Product> maybeProduct = productRepository.findById( orderLine.getProductId());
+            Optional<Product> maybeProduct = productRepository.findById(orderLine.getProductId());
             if (!maybeProduct.isPresent()) {
                 response.setCode("001");
                 response.setMessage("Product not found: " +  orderLine.getProductId());
@@ -79,6 +78,11 @@ public class OrderServiceImp implements OrderService {
             // get product
             Product product = maybeProduct.get();
             // update quantity in db
+
+            if (product.getQuantity() <= orderLine.getQuantity()){
+                throw new IllegalArgumentException("Product is out of stock: " + orderLine.getProductId());
+            }
+            product.setQuantity(product.getQuantity() - orderLine.getQuantity());
 
 
             // save update product details
@@ -92,14 +96,19 @@ public class OrderServiceImp implements OrderService {
 
             //set transaction total
             transactionDetail.setTotal(transactionDetail.getTotal() + (product.getPrice() * orderLine.getQuantity()));
-
-            }
-        // transaction
+        }
+        // save transaction to db
         transactionDetailRepository.save(transactionDetail);
 
         response.setCode("00");
         response.setMessage("Created an order");
-        response.setBody(orderLines.toString());
+        /*
+        convert from list to JSON object
+        */
+        //utils.convertObjectToString(orderLines);
+        Utils utils = new Utils();
+        response.setBody(utils.convertObjectToJson(orderLines));
+        //response.setBody(orderLines.toString());
         return response;
     }
 }
