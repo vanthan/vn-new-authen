@@ -12,7 +12,8 @@ public class TransactionDetail {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private int id;
     private int orderId;
-//    private String fullName;
+    private String email;
+    private String fullName;
     private int count;
     private int total;
     private String status;

@@ -7,7 +7,7 @@ import org.springframework.web.multipart.MultipartFile;
 public class ProductForm {
     private String sku;
     private String name;
-    private float price;
+    private int price;
     private String image;
     private int quantity;
 }

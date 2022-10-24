@@ -16,7 +16,7 @@ public class Product {
     private String sku;
     private String image;
     private String name;
-    private float price;
+    private int price;
     private int quantity;
     private String createdBy;
 

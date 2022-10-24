@@ -5,8 +5,8 @@ import com.vanthan.vn.jwt.AuthTokenFilter;
 import com.vanthan.vn.jwt.JwtUtils;
 import com.vanthan.vn.model.Order;
 import com.vanthan.vn.model.OrderDetail;
-import com.vanthan.vn.model.Product;
 import com.vanthan.vn.model.TransactionDetail;
+import com.vanthan.vn.model.entity.Product;
 import com.vanthan.vn.repository.OrderDetailRepository;
 import com.vanthan.vn.repository.OrderRepository;
 import com.vanthan.vn.repository.ProductRepository;
@@ -14,7 +14,6 @@ import com.vanthan.vn.repository.TransactionDetailRepository;
 import com.vanthan.vn.service.OrderService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-;
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 import java.util.Map;
@@ -92,6 +91,7 @@ public class OrderServiceImp implements OrderService {
 
             //set transaction total
             transactionDetail.setTotal(transactionDetail.getTotal() + (product.getPrice() * orderLine.getQuantity()));
+
 
             }
         // transaction
