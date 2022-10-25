@@ -1,17 +1,17 @@
 package com.vanthan.vn.jwt;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.function.Function;
 
 import com.vanthan.vn.dto.UserInfo;
-import io.jsonwebtoken.*;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.function.Function;
+import io.jsonwebtoken.*;
 
 @Component
 public class JwtUtils {
@@ -60,7 +60,6 @@ public class JwtUtils {
 
         return false;
     }
-
     /*
 
      */
