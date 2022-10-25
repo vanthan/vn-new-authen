@@ -12,18 +12,27 @@ import com.vanthan.vn.repository.OrderRepository;
 import com.vanthan.vn.repository.ProductRepository;
 import com.vanthan.vn.repository.TransactionDetailRepository;
 import com.vanthan.vn.service.OrderService;
+import com.vanthan.vn.util.CommonUtil;
 import com.vanthan.vn.util.Utils;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.ParameterizedTypeReference;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
 ;
 import javax.servlet.http.HttpServletRequest;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
 @Service
+@Log4j2
 public class OrderServiceImp implements OrderService {
+
+    @Value("${base.url.authen}")
+    private String baseUrl;
     private final OrderDetailRepository orderDetailRepository;
     private final OrderRepository orderRepository;
     private final ProductRepository productRepository;
@@ -46,6 +55,10 @@ public class OrderServiceImp implements OrderService {
     @Override
     public BaseResponse<OrderResult> createOrder(OrderForm form, HttpServletRequest request) {
         BaseResponse<OrderResult> response = new BaseResponse<>();
+        EmailDTO emailDTO = new EmailDTO();
+        // Map props => set props email
+        Map<String, Object> props = new HashMap<String, Object>();
+
         List<OrderLineForm> orderLines = form.getOrderLines();
         Order order = new Order();
         List<OrderDetailResult> orderDetailResultList = new ArrayList<>();
@@ -55,8 +68,15 @@ public class OrderServiceImp implements OrderService {
 
         Map<String,Object> userInfo = jwtUtils.getClaimFromToken(token, claims -> {return claims;});
         int userid = Integer.parseInt(userInfo.get("id").toString());
-//        String email = userInfo.get("email").toString();
-//        String username = userInfo.get("username").toString();
+        String email = userInfo.get("email").toString();
+        String username = userInfo.get("username").toString();
+
+        // SET EMAILĐTO
+        emailDTO.setTemplate("mail-template");
+        emailDTO.setSubject("Subject_TEST");
+        emailDTO.setRecipient(email);
+
+
 
         // save order
         order.setDeliveryCode(order.generateRandomCode());
@@ -69,6 +89,8 @@ public class OrderServiceImp implements OrderService {
         transactionDetail.setPaymentMethod("cash");
         transactionDetail.setStatus("done");
         transactionDetail.setTotal(0);
+
+
 
         // find product
         for (OrderLineForm orderLine : orderLines) {
@@ -119,6 +141,26 @@ public class OrderServiceImp implements OrderService {
         result.setId(order.getId());
         result.setDetails(orderDetailResultList);
         response.setBody(result);
+        // Call API Send Mail
+        String url = baseUrl + "/sendMail";
+        props.put("fullName", username);
+        props.put("product", orderDetailResultList);
+        props.put("paymentMethod", transactionDetail.getPaymentMethod());
+        props.put("total", transactionDetail.getTotal());
+        props.put("status", transactionDetail.getStatus());
+        emailDTO.setProps(props);
+
+        log.info("Resquest Body {}", CommonUtil.convertFromObject(emailDTO));
+
+        RestTemplate restTemplate = new RestTemplate();
+        HttpHeaders headers = new HttpHeaders();
+        headers.setBearerAuth(token);
+        HttpEntity<EmailDTO> requestSaveProduct = new HttpEntity<>(emailDTO, headers);
+        restTemplate.exchange(url, HttpMethod.POST, requestSaveProduct,new ParameterizedTypeReference<BaseResponse<Object>>() {} );
+
+
+
+
         return response;
     }
 }
