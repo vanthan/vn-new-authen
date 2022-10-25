@@ -65,9 +65,10 @@ public class OrderServiceImp implements OrderService {
         // save transaction detail
         TransactionDetail transactionDetail = new TransactionDetail();
         transactionDetail.setOrderId(order.getId());
+
         transactionDetail.setPaymentMethod("cash");
         transactionDetail.setStatus("done");
-        transactionDetail.setTotal(0);
+        transactionDetail.setTotalCost(0);
 
         // find product
         for (OrderLineForm orderLine : orderLines) {
@@ -92,7 +93,7 @@ public class OrderServiceImp implements OrderService {
             // save order detail - save to db
             OrderDetail orderDetail = new OrderDetail();
             orderDetail.setOrderId(order.getId());
-            orderDetail.setProductId( orderLine.getProductId());
+            orderDetail.setProductId(orderLine.getProductId());
             orderDetail.setQuantity(orderLine.getQuantity());
             orderDetailRepository.save(orderDetail);
             // ket qua cua service - 1 loai DTO o dang cu the
@@ -101,11 +102,13 @@ public class OrderServiceImp implements OrderService {
             orderDetailResult.setProductName(product.getName());
             orderDetailResult.setQuantity(orderLine.getQuantity());
             orderDetailResult.setPrice(product.getPrice());
+            orderDetailResult.setTotal(orderLine.getQuantity() * product.getPrice());
 
             orderDetailResultList.add(orderDetailResult);
 
             //set transaction total
-            transactionDetail.setTotal(transactionDetail.getTotal() + (product.getPrice() * orderLine.getQuantity()));
+            transactionDetail.setTotalItem(orderLine.getQuantity());
+            transactionDetail.setTotalCost(transactionDetail.getTotalCost() + (product.getPrice() * orderLine.getQuantity()));
         }
         // save transaction to db
         transactionDetailRepository.save(transactionDetail);
@@ -115,9 +118,31 @@ public class OrderServiceImp implements OrderService {
 
         // return response - OR la 1 object
         OrderResult result = new OrderResult();
-        result.setId(order.getId());
-        result.setDetails(orderDetailResultList);
+        result.setOrderDetailList(orderDetailResultList);
         response.setBody(result);
+        return response;
+    }
+
+    @Override
+    public BaseResponse<OrderResult> getOrder(int orderId) {
+        BaseResponse<OrderResult> response = new BaseResponse<>();
+
+        //get order detail
+        List<OrderDetailResult> orderDetailResultList = new ArrayList<>();
+        //orderDetailResultList = orderDetailRepository.findById(orderId);
+        //get transaction detail by order id
+        List<TransactionDetail> transactionDetailList = new ArrayList<>();
+        transactionDetailList = transactionDetailRepository.findByOrderId(orderId);
+        // if existed --> update quantity
+        if (transactionDetailList == null || transactionDetailList.isEmpty()) {
+            response.setCode("11");
+            response.setMessage("Not found: " + orderId);
+            return response;
+        }
+
+        OrderResult orderResult = new OrderResult();
+        orderResult.setTransactionDetailList(transactionDetailList);
+        response.setBody(orderResult);
         return response;
     }
 }

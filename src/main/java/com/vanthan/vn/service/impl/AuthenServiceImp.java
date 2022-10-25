@@ -35,7 +35,7 @@ public class AuthenServiceImp implements ImpAuthen {
             return response;
         }
 
-        //crate new user
+        //create new user
         user = new User();
         user.setFullName(body.getFullName());
         user.setEmail(body.getEmail());
@@ -50,7 +50,7 @@ public class AuthenServiceImp implements ImpAuthen {
         RegisterResult registerResult = new RegisterResult();
         // result token
         UserInfo userInfo = new UserInfo();
-//        userInfo.setUserName(body.getUsername());
+        userInfo.setUserName(body.getUsername());
         userInfo.setUserId(user.getId());
         userInfo.setEmail(user.getEmail());
         userInfo.setPassword(user.getPassword());

@@ -20,6 +20,5 @@ public class UserController {
         return ResponseEntity.ok(authen.register(body));
     }
 
-    //@PostMapping(value = "/authenticate")
 
 }

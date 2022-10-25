@@ -19,6 +19,7 @@ public class Order {
     private String deliveryCode;
     private int customerId;
 
+
     public String generateRandomCode() {
 
         int leftLimit = 97; // letter 'a'

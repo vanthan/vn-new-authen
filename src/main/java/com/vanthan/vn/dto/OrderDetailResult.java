@@ -7,5 +7,6 @@ public class OrderDetailResult {
     private String productName;
     private int quantity;
     private int price;
+    private int total;
 
 }
