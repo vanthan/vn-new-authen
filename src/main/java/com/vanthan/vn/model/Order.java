@@ -16,9 +16,17 @@ public class Order {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
-    private String deliveryCode;
-    private int customerId;
-
+   // private String deliveryCode;
+    private int userId;
+    private String username;
+    private String email;
+    @OneToMany
+    private List<OrderItem> items;
+    private int totalItems;
+    private int totalCost;
+    private String method;
+    private String status;
+    private String paymentId;
 
     public String generateRandomCode() {
 

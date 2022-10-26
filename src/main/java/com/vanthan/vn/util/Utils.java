@@ -2,7 +2,6 @@ package com.vanthan.vn.util;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.vanthan.vn.model.TransactionDetail;
 
 
 public class Utils {

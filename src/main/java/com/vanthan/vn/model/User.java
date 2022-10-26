@@ -19,5 +19,5 @@ public class User {
     private String email;
     private String username;
     private String password;
-    private Timestamp created;
+    private Timestamp createdAt;
 }

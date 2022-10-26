@@ -1,18 +1,15 @@
 package com.vanthan.vn.service.impl;
 
 import com.vanthan.vn.dto.*;
+import com.vanthan.vn.dto.OrderResult;
 import com.vanthan.vn.jwt.AuthTokenFilter;
 import com.vanthan.vn.jwt.JwtUtils;
-import com.vanthan.vn.model.Order;
-import com.vanthan.vn.model.OrderDetail;
-import com.vanthan.vn.model.Product;
-import com.vanthan.vn.model.TransactionDetail;
+import com.vanthan.vn.model.*;
 import com.vanthan.vn.repository.OrderDetailRepository;
 import com.vanthan.vn.repository.OrderRepository;
 import com.vanthan.vn.repository.ProductRepository;
-import com.vanthan.vn.repository.TransactionDetailRepository;
+import com.vanthan.vn.repository.UserRepository;
 import com.vanthan.vn.service.OrderService;
-import com.vanthan.vn.util.Utils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import javax.servlet.http.HttpServletRequest;
@@ -25,52 +22,41 @@ import java.util.Optional;
 public class OrderServiceImp implements OrderService {
     private final OrderDetailRepository orderDetailRepository;
     private final OrderRepository orderRepository;
+    private final UserRepository userRepository;
     private final ProductRepository productRepository;
-    private final TransactionDetailRepository transactionDetailRepository;
     private final JwtUtils jwtUtils;
 
     private final AuthTokenFilter authTokenFilter;
 
 
     @Autowired
-    public OrderServiceImp(OrderDetailRepository orderDetailRepository, OrderRepository orderRepository, ProductRepository productRepository, TransactionDetailRepository transactionDetailRepository, JwtUtils jwtUtils, AuthTokenFilter authTokenFilter) {
+    public OrderServiceImp(OrderDetailRepository orderDetailRepository, OrderRepository orderRepository, UserRepository userRepository, ProductRepository productRepository, JwtUtils jwtUtils, AuthTokenFilter authTokenFilter) {
         this.orderDetailRepository = orderDetailRepository;
         this.orderRepository = orderRepository;
+        this.userRepository = userRepository;
         this.productRepository = productRepository;
-        this.transactionDetailRepository = transactionDetailRepository;
         this.jwtUtils = jwtUtils;
         this.authTokenFilter = authTokenFilter;
     }
 
     @Override
-    public BaseResponse<OrderResult> createOrder(OrderForm form, HttpServletRequest request) {
-        BaseResponse<OrderResult> response = new BaseResponse<>();
+    public BaseResponse<String> createOrder(OrderForm form, String token) {
+        BaseResponse<String> response = new BaseResponse<>();
+        // get order item from the request list
         List<OrderLineForm> orderLines = form.getOrderLines();
         Order order = new Order();
-        List<OrderDetailResult> orderDetailResultList = new ArrayList<>();
-
         // get info from token: email + full name
-        String token = authTokenFilter.parseJwt(request);
 
         Map<String,Object> userInfo = jwtUtils.getClaimFromToken(token, claims -> {return claims;});
         int userid = Integer.parseInt(userInfo.get("id").toString());
-//        String email = userInfo.get("email").toString();
-//        String username = userInfo.get("username").toString();
+        String email = userInfo.get("email").toString();
+        String username = userInfo.get("username").toString();
 
-        // save order
-        order.setDeliveryCode(order.generateRandomCode());
-        order.setCustomerId(userid);
-        orderRepository.save(order);
+        //get user info from token then set to order
+        order.setUserId(userid);
+        order.setUsername(username);
+        order.setEmail(email);
 
-        // save transaction detail
-        TransactionDetail transactionDetail = new TransactionDetail();
-        transactionDetail.setOrderId(order.getId());
-
-        transactionDetail.setPaymentMethod("cash");
-        transactionDetail.setStatus("done");
-        transactionDetail.setTotalCost(0);
-
-        // find product
         for (OrderLineForm orderLine : orderLines) {
             Optional<Product> maybeProduct = productRepository.findById(orderLine.getProductId());
             if (!maybeProduct.isPresent()) {
@@ -80,68 +66,62 @@ public class OrderServiceImp implements OrderService {
             }
             // get product
             Product product = maybeProduct.get();
-            // update quantity in db
 
+            // update quantity in db
             if (product.getQuantity() < orderLine.getQuantity()){
                 throw new IllegalArgumentException("Product is out of stock: " + orderLine.getProductId());
             }
             product.setQuantity(product.getQuantity() - orderLine.getQuantity());
 
-
             // save update product details
             productRepository.save(product);
-            // save order detail - save to db
-            OrderDetail orderDetail = new OrderDetail();
-            orderDetail.setOrderId(order.getId());
-            orderDetail.setProductId(orderLine.getProductId());
-            orderDetail.setQuantity(orderLine.getQuantity());
-            orderDetailRepository.save(orderDetail);
-            // ket qua cua service - 1 loai DTO o dang cu the
-            OrderDetailResult orderDetailResult = new OrderDetailResult();
-            orderDetailResult.setProductId(product.getId());
-            orderDetailResult.setProductName(product.getName());
-            orderDetailResult.setQuantity(orderLine.getQuantity());
-            orderDetailResult.setPrice(product.getPrice());
-            orderDetailResult.setTotal(orderLine.getQuantity() * product.getPrice());
 
-            orderDetailResultList.add(orderDetailResult);
+            //set change of total quantity + total cost
+            order.setTotalItems(order.getTotalItems() + orderLine.getQuantity());
+            order.setTotalCost(order.getTotalCost() + (product.getPrice() * orderLine.getQuantity()));
+            orderRepository.save(order);
+            //save order item
+            OrderItem item = new OrderItem();
+            item.setOrderId(order.getId());
+            item.setProductId(product.getId());
+            item.setProductName(product.getName());
+            item.setQuantity(orderLine.getQuantity());
+            item.setListPrice(product.getPrice());
+            orderDetailRepository.save(item);
 
-            //set transaction total
-            transactionDetail.setTotalItem(orderLine.getQuantity());
-            transactionDetail.setTotalCost(transactionDetail.getTotalCost() + (product.getPrice() * orderLine.getQuantity()));
+
         }
-        // save transaction to db
-        transactionDetailRepository.save(transactionDetail);
 
+        orderRepository.save(order);
         response.setCode("00");
-        response.setMessage("Created an order");
-
-        // return response - OR la 1 object
-        OrderResult result = new OrderResult();
-        result.setOrderDetailList(orderDetailResultList);
-        response.setBody(result);
+        response.setMessage("success");
+        response.setBody("Created an order");
         return response;
     }
 
     @Override
     public BaseResponse<OrderResult> getOrder(int orderId) {
         BaseResponse<OrderResult> response = new BaseResponse<>();
-
+        /*
+        order detail contains 2 parts
+        + user info
+        + order item result
+         */
         //get order detail
-        List<OrderDetailResult> orderDetailResultList = new ArrayList<>();
         //orderDetailResultList = orderDetailRepository.findById(orderId);
         //get transaction detail by order id
-        List<TransactionDetail> transactionDetailList = new ArrayList<>();
-        transactionDetailList = transactionDetailRepository.findByOrderId(orderId);
+        List<OrderResult> orderResultList = new ArrayList<>();
+        orderRepository.findById(orderId);
+        //transactionDetailList = transactionDetailRepository.findByOrderId(orderId);
         // if existed --> update quantity
-        if (transactionDetailList == null || transactionDetailList.isEmpty()) {
+        if (orderResultList == null || orderResultList.isEmpty()) {
             response.setCode("11");
             response.setMessage("Not found: " + orderId);
             return response;
         }
 
+    // ket qua cua service - 1 loai DTO o dang cu the
         OrderResult orderResult = new OrderResult();
-        orderResult.setTransactionDetailList(transactionDetailList);
         response.setBody(orderResult);
         return response;
     }

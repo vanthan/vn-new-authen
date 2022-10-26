@@ -23,7 +23,7 @@ public class LoginServiceImp implements LoginService {
     private UserTokenRespository userTokenRespository;
 
     @Override
-    public BaseResponse<LoginResponse> checkLogin(UserDTO body) throws Exception {
+    public BaseResponse<LoginResponse> checkLogin(UserForm body) throws Exception {
         User user = loginRepository.findByEmailAndPassword(body.getEmail(), body.getPassword());
         if (user == null) {
             throw new Exception("Email hoac mat khau khong ton tai");
@@ -31,7 +31,7 @@ public class LoginServiceImp implements LoginService {
 
         RegisterResult registerResult = new RegisterResult();
 
-        UserInfo userInfo = new UserInfo();
+        UserResult userInfo = new UserResult();
         userInfo.setUserName(user.getUsername());
         userInfo.setUserId(user.getId());
         userInfo.setEmail(user.getEmail());

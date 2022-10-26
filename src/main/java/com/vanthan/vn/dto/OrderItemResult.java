@@ -2,7 +2,7 @@ package com.vanthan.vn.dto;
 import lombok.Data;
 
 @Data
-public class OrderDetailResult {
+public class OrderItemResult {
     private int productId;
     private String productName;
     private int quantity;
