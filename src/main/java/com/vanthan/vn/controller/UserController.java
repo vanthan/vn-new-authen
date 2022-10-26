@@ -21,6 +21,5 @@ public class UserController extends BaseController {
         return ResponseEntity.ok(authen.register(body));
     }
 
-    //@PostMapping(value = "/authenticate")
 
 }
