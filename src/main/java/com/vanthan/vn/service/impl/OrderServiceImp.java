@@ -143,12 +143,14 @@ public class OrderServiceImp implements OrderService {
         OrderResult result = new OrderResult();
         result.setOrderDetailList(orderDetailResultList);
         response.setBody(result);
+
         // Call API Send Mail
         String url = baseUrl + "/sendMail";
         props.put("fullName", username);
         props.put("product", orderDetailResultList);
         props.put("paymentMethod", transactionDetail.getPaymentMethod());
-        props.put("total", transactionDetail.getTotal());
+        props.put("price", transactionDetail.getTotalCost());
+        props.put("total", transactionDetail.getTotalCost());
         props.put("status", transactionDetail.getStatus());
         emailDTO.setProps(props);
 

@@ -14,8 +14,8 @@ public class TransactionDetail {
     private int orderId;
     private String email;
     private String fullName;
-    private int count;
-    private int total;
+    private int totalItem;
+    private int totalCost;
     private String status;
     private String paymentMethod;
 
