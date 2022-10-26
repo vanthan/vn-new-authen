@@ -13,6 +13,7 @@ import com.vanthan.vn.service.OrderService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import javax.servlet.http.HttpServletRequest;
+import javax.swing.text.html.Option;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -88,8 +89,6 @@ public class OrderServiceImp implements OrderService {
             item.setQuantity(orderLine.getQuantity());
             item.setListPrice(product.getPrice());
             orderDetailRepository.save(item);
-
-
         }
 
         orderRepository.save(order);
@@ -102,26 +101,41 @@ public class OrderServiceImp implements OrderService {
     @Override
     public BaseResponse<OrderResult> getOrder(int orderId) {
         BaseResponse<OrderResult> response = new BaseResponse<>();
-        /*
-        order detail contains 2 parts
-        + user info
-        + order item result
-         */
-        //get order detail
-        //orderDetailResultList = orderDetailRepository.findById(orderId);
-        //get transaction detail by order id
-        List<OrderResult> orderResultList = new ArrayList<>();
-        orderRepository.findById(orderId);
-        //transactionDetailList = transactionDetailRepository.findByOrderId(orderId);
-        // if existed --> update quantity
-        if (orderResultList == null || orderResultList.isEmpty()) {
+        Optional<Order> maybeOrder = orderRepository.findById(orderId);
+
+        // if existed
+        if (!maybeOrder.isPresent()) {
             response.setCode("11");
             response.setMessage("Not found: " + orderId);
             return response;
         }
 
-    // ket qua cua service - 1 loai DTO o dang cu the
+        Order order = maybeOrder.get();
+        // user result
+        int userId = order.getUserId();
+        String username = order.getUsername();
+        String email = order.getEmail();
+        UserResult userResult = new UserResult(userId, username, email);
+
+        // order item list
+        List<OrderItemResult> orderItemResultList = new ArrayList<>();
+        for (OrderItem orderItem : order.getItems()){
+            OrderItemResult orderItemResult = new OrderItemResult();
+            orderItemResult.setProductId(orderItem.getProductId());
+            orderItemResult.setProductName(orderItem.getProductName());
+            orderItemResult.setQuantity(orderItem.getQuantity());
+            orderItemResult.setPrice(orderItem.getListPrice());
+            orderItemResult.setTotal(orderItem.getQuantity() * orderItem.getListPrice());
+            orderItemResultList.add(orderItemResult);
+        }
+
         OrderResult orderResult = new OrderResult();
+        orderResult.setUserResult(userResult);
+        orderResult.setItems(orderItemResultList);
+        orderResult.setId(orderId);
+        orderResult.setTotalItems(order.getTotalItems());
+        orderResult.setTotalCost(order.getTotalCost());
+        //orderResult.setPaymentDetails();
         response.setBody(orderResult);
         return response;
     }
