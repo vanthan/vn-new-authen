@@ -4,9 +4,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 
 @Entity
 @Table(name = "vn_order")
@@ -25,9 +23,9 @@ public class Order {
     private List<OrderItem> items;
     private int totalItems;
     private int totalCost;
-    private String method;
+    private String paymentMethod;
     private String status;
-    private String paymentId;
+   // private String paymentId;
 
 
 

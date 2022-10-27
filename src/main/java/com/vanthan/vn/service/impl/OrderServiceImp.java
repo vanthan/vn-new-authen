@@ -80,6 +80,9 @@ public class OrderServiceImp implements OrderService {
             //set change of total quantity + total cost
             order.setTotalItems(order.getTotalItems() + orderLine.getQuantity());
             order.setTotalCost(order.getTotalCost() + (product.getPrice() * orderLine.getQuantity()));
+            order.setPaymentMethod("CASH");
+            order.setStatus("CREATED");
+
             orderRepository.save(order);
             //save order item
             OrderItem item = new OrderItem();
@@ -90,8 +93,6 @@ public class OrderServiceImp implements OrderService {
             item.setListPrice(product.getPrice());
             orderDetailRepository.save(item);
         }
-
-        orderRepository.save(order);
         response.setCode("00");
         response.setMessage("success");
         response.setBody("Created an order");
@@ -132,11 +133,19 @@ public class OrderServiceImp implements OrderService {
         OrderResult orderResult = new OrderResult();
         orderResult.setUserResult(userResult);
         orderResult.setItems(orderItemResultList);
-        orderResult.setId(orderId);
+        orderResult.setOrderId(orderId);
         orderResult.setTotalItems(order.getTotalItems());
         orderResult.setTotalCost(order.getTotalCost());
-        //orderResult.setPaymentDetails();
+        orderResult.setPaymentMethod("CASH");
+        orderResult.setStatus("CREATED");
         response.setBody(orderResult);
+        return response;
+    }
+
+    @Override
+    public BaseResponse<List<Order>> findOrdersByUserId(int userId) {
+        BaseResponse<List<Order>> response = new BaseResponse<>();
+        response.setBody(orderRepository.findOrderByUserId(userId));
         return response;
     }
 }
