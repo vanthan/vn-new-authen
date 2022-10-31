@@ -3,7 +3,7 @@ package com.vanthan.vn.service.impl;
 import com.vanthan.vn.dto.BaseResponse;
 import com.vanthan.vn.dto.RegisterForm;
 import com.vanthan.vn.dto.RegisterResult;
-import com.vanthan.vn.dto.UserInfo;
+import com.vanthan.vn.dto.UserResult;
 import com.vanthan.vn.jwt.JwtUtils;
 import com.vanthan.vn.model.entity.User;
 import com.vanthan.vn.model.entity.UserToken;
@@ -48,12 +48,12 @@ public class AuthenServiceImp implements ImpAuthen {
         //create token, add token
         RegisterResult registerResult = new RegisterResult();
         // result token
-        UserInfo userInfo = new UserInfo();
-        userInfo.setUserName(body.getUsername());
-        userInfo.setUserId(user.getId());
-        userInfo.setEmail(user.getEmail());
-        userInfo.setPassword(user.getPassword());
-        registerResult.setToken(jwtUtils.generateJwtToken(userInfo));
+        UserResult userResult = new UserResult();
+        userResult.setUserName(body.getUsername());
+        userResult.setUserId(user.getId());
+        userResult.setEmail(user.getEmail());
+        userResult.setPassword(user.getPassword());
+        registerResult.setToken(jwtUtils.generateJwtToken(userResult));
         UserToken userToken = new UserToken();
         userToken.setToken(registerResult.getToken());
         userToken.setUserId(user.getId());

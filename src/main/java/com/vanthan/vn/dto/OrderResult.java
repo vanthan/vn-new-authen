@@ -1,15 +1,26 @@
 package com.vanthan.vn.dto;
 
-import com.vanthan.vn.model.Order;
-import com.vanthan.vn.model.OrderDetail;
-import com.vanthan.vn.model.TransactionDetail;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Data;
 
-import java.util.ArrayList;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import java.sql.Timestamp;
 import java.util.List;
 
 @Data
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class OrderResult {
-    private List<OrderDetailResult> orderDetailList;
-    private List<TransactionDetail> transactionDetailList;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private int id;
+    private int orderId;
+    private Timestamp createdAt;
+    private UserResult userResult;
+    private List<OrderItemResult> items;
+    private int totalItems;
+    private int totalCost;
+    private String paymentMethod;
+    private String status;
 }
